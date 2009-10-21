@@ -1,5 +1,5 @@
 #summary Some example of using Lagger
-#labels Phase-Implementation
+#labels Phase-Implementation,Featured
 
 == config.php ==
 
