@@ -1,28 +1,45 @@
 <?php
 
-class Lagger_HandlerExceptions extends Lagger_HandlerAbstract {
+/**
+ * 
+ * @see http://code.google.com/p/lagger
+ * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
+ * 
+ */
+class Lagger_HandlerExceptions extends Lagger_Handler {
 	
-	protected $config = array('default_code' => E_USER_ERROR, 'merge_old_handler' => false, 'restore_old_handler' => false);
-	protected $oldExceptionHandler;
+	protected $oldExceptionsHandler;
+	protected $callOldExceptionsHandler;
 
+	public function __construct(Lagger_Eventspace $eventspace, $callOldExceptionsHandler=false) {
+		$this->callOldExceptionsHandler = $callOldExceptionsHandler;
+		parent::__construct($eventspace);
+	}
+	
 	protected function init() {
-		parent::init();
-		$this->oldExceptionHandler = set_exception_handler(array($this, 'handleException'));
+		$this->oldExceptionsHandler = set_exception_handler(array($this, 'handle'));
 	}
 
-	public function handleException(Exception $exception) {
-		$code = $exception->getCode() ? $exception->getCode() : $this->config['default_code'];
+	public function handle(Exception $exception) {
+		$code = $exception->getCode() ? $exception->getCode() : E_USER_ERROR;
 		
-		$this->handle($code, $exception->getMessage(), $exception->getFile(), $exception->getLine());
+		$eventVars = array(
+		'message' => $exception->getMessage(),
+		'code' => $code,
+		'type' => get_class($exception),
+		'file' => $exception->getFile(),
+		'line' => $exception->getLine());
 		
-		if ($this->oldExceptionHandler && $this->config['merge_old_handler']) {
-			user_func_array($this->oldExceptionHandler, array($exception));
+		$this->handleActions($eventVars, 'fatal');
+		
+		if ($this->oldExceptionsHandler && $this->callOldExceptionsHandler) {
+			call_user_func_array($this->oldExceptionsHandler, array($exception));
 		}
 	}
 
 	public function __destruct() {
-		if ($this->oldExceptionHandler && $this->cofig['restore_old_handler']) {
-			set_handler($this->oldExceptionHandler);
+		if ($this->oldExceptionsHandler) {
+			set_exception_handler($this->oldExceptionsHandler);
 		}
 	}
 }

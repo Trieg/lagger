@@ -1,41 +1,47 @@
-<?php 
+<?php
 
 define('LOGS_DIR', 'logs');
 
+define('SKIPER_DIR', LOGS_DIR . DIRECTORY_SEPARATOR . 'skip');
+define('SKIPER_EXPIRE', 60 * 60 * 24);
+define('SKIPER_HASH_TEMPLATE', '{file}{line}');
+
 define('ERRORS_STDOUT', true);
-define('ERRORS_STDOUT_TYPES', null);
-define('ERRORS_STDOUT_TEMPLATE', '<b>%type%:</b> %message%<br><em>%file% [%line%]</em><br>');
+define('ERRORS_STDOUT_TAGS', null);
+define('ERRORS_STDOUT_TEMPLATE', '<div><b>{type}:</b> {message}<br /><em>{file} [{line}]</em></div>');
 define('ERRORS_STDOUT_REWRITE_PIN', null);
 
 define('ERRORS_LOGING', true);
-define('ERRORS_LOGING_TYPES', null);
-define('ERRORS_LOGING_FILEPATH', LOGS_DIR.DIRECTORY_SEPARATOR.'errors_log.htm');
+define('ERRORS_LOGING_TAGS', 'warning,fatal');
+define('ERRORS_LOGING_FILEPATH', LOGS_DIR . DIRECTORY_SEPARATOR . 'errors_log.htm');
 define('ERRORS_LOGING_LIMIT_SIZE', 500000);
 define('ERRORS_LOGING_LIMIT_DAYS', 180);
-define('ERRORS_LOGING_TEMPLATE', '%date% %time% <a href="http://%host%%uri%">http://%host%%uri%</a><br><b>%type%</b>: %message%<br>%file% [%line%]<hr>');
+define('ERRORS_LOGING_TEMPLATE', '{date} {time} <a href="http://{host}{uri}">http://{host}{uri}</a><br /><b>{type}</b>: {message|htmlentities}<br />{file} [{line}]<hr />');
 
-define('ERRORS_SMS', true);
-define('ERRORS_SMS_TO', '79627271169,79052187474');
+define('ERRORS_SMS', false); // TODO: check /library/SmsSender.php before enable it
+define('ERRORS_SMS_TAGS', 'warning,fatal');
+define('ERRORS_SMS_TO', '79627271169,79218550471');
 define('ERRORS_SMS_FROM', 'MyWebSite');
-define('ERRORS_SMS_MESSAGE', 'Web site error, check log at %date% %time%');
+define('ERRORS_SMS_MESSAGE', 'Web site error, check log at {date} {time}');
 
-define('ERRORS_EMAIL', false); // TODO: must be TRUE on production
-define('ERRORS_EMAIL_FROM', 'lagger@mywebsite.com');
-define('ERRORS_EMAIL_TO', 'myemail@gmail.com,adminemail@gmail.com');
-define('ERRORS_EMAIL_SUBJECT', 'Error on my website');
-define('ERRORS_EMAIL_MESSAGE', "Date: %date% %time%\nURL: http://%host%%uri%\nError(%type%): %message%\nSource: %file% [%line%]");
+define('ERRORS_EMAIL', true); // TODO: must be TRUE on production server
+define('ERRORS_EMAIL_TAGS', 'warning,fatal');
+define('ERRORS_EMAIL_FROM', 'Lagger <lagger@mywebsite.com>');
+define('ERRORS_EMAIL_TO', 'Jack Johnson <jack_admin@gmail.com>, mike_developer@gmail.com');
+define('ERRORS_EMAIL_SUBJECT', '{type} error in my website');
+define('ERRORS_EMAIL_MESSAGE', "Date: {date} {time}\nURL: http://{host}{uri}\nError({type}): {message}\nSource: {file} [{line}]\n\nPOST:\n{post}\n\nSESSION:\n{session}");
 
 define('DEBUG_STDOUT', true);
-define('DEBUG_STDOUT_PROFILES', false);
-define('DEBUG_STDOUT_TEMPLATE', '%message%<br />');
+define('DEBUG_STDOUT_TAGS', 'test,high');
+define('DEBUG_STDOUT_TEMPLATE', '<div><font color="green">{message|htmlentities}</font></div>');
 define('DEBUG_STDOUT_REWRITE_PIN', null);
 
 define('DEBUG_LOGING', true);
-define('DEBUG_LOGING_TYPES', 'post');
-define('DEBUG_LOGING_FILEPATH', LOGS_DIR.DIRECTORY_SEPARATOR.'debug_log.htm');
+define('DEBUG_LOGING_TAGS', 'sql');
+define('DEBUG_LOGING_FILEPATH', LOGS_DIR . DIRECTORY_SEPARATOR . 'debug_sql_log.csv');
 define('DEBUG_LOGING_LIMIT_SIZE', 500000);
-define('DEBUG_LOGING_LIMIT_DAYS', 3);
-define('DEBUG_LOGING_TEMPLATE', "%date% %time%<br>%message%<hr>");
+define('DEBUG_LOGING_LIMIT_DAYS', 7);
+define('DEBUG_LOGING_TEMPLATE', "{date} {time};{process_id|csv};{microtime|csv};{message|trim|csv}\n");
 
 // Autoload classes
 define('LIB_DIR', '../library/');
@@ -50,4 +56,5 @@ function autoloadByDir($class) {
 }
 spl_autoload_register('autoloadByDir');
 
-require_once('lagger_init.php');
+// Set it to prevent Time zone PHP Warning when calling date() function
+date_default_timezone_set('Europe/Moscow'); 
