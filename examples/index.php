@@ -10,7 +10,7 @@ toDebug('Debug message with tags "high,test"', 'high,test'); // will be printed
 toDebug('Debug message with tags "high,test,database"', 'high,test,database'); // will be printed
 
 
-// Debug by tag 'sql'. Check output in '\examples\logs\debug_sql_log.csv' 
+// Debug by tag 'sql'. Check output in '\examples\logs\debug_sql_log.csv', open with Microsoft Excel or Open office 
 $sql = 'SELECT * FROM users';
 toDebug('Sql started: ' . $sql, 'sql,start');usleep(300); // exec sql query
 toDebug('Sql finished: ' . $sql, 'sql,finish');
