@@ -1,0 +1,1 @@
+<?phprequire_once('config.php');echo $some['unkownVar'];throw new Exception('Some exception message', E_USER_NOTICE);
