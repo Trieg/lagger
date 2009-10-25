@@ -1,49 +1,41 @@
 <?php
 
-class Lagger_ActionException extends Lagger_ActionAbstract {
+/**
+ * 
+ * @see http://code.google.com/p/lagger
+ * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
+ * 
+ */
+class Lagger_ActionException extends Lagger_Action {
 	
 	protected $exceptionClass;
-	
 	protected $messageTemplate;
-	protected $typeTemplate;
+	protected $codeTemplate;
 	protected $fileTemplate;
 	protected $lineTemplate;
 
-	public function __construct($exceptionClass = null, Lagger_Template $messageTemplate = null, Lagger_Template $typeTemplate = null, Lagger_Template $fileTemplate = null, Lagger_Template $lineTemplate = null) {
-		if(!$exceptionClass) {
+	public function __construct($exceptionClass = null, $messageTemplate = null, $codeTemplate = null, $fileTemplate = null, $lineTemplate = null) {
+		if (!$exceptionClass) {
 			$exceptionClass = 'Lagger_PhpErrorException';
 		}
 		if (!is_subclass_of($exceptionClass, 'Exception')) {
-			throw new Exception(__METHOD__ . ' must recieve name of Exception subclass as first argument');
+			throw new Exception('First argument require to be subclass of Exception');
 		}
 		$this->exceptionClass = $exceptionClass;
 		
-		if (!$messageTemplate) {
-			$messageTemplate = new Lagger_Template('%message%');
-		}
-		$this->messageTemplate = $messageTemplate;
-		
-		if (!$typeTemplate) {
-			$typeTemplate = new Lagger_Template('%type%');
-		}
-		$this->typeTemplate = $typeTemplate;
-		
-		if (!$fileTemplate) {
-			$fileTemplate = new Lagger_Template('%file%');
-		}
-		$this->fileTemplate = $fileTemplate;
-		
-		if (!$lineTemplate) {
-			$lineTemplate = new Lagger_Template('%line%');
-		}
-		$this->lineTemplate = $lineTemplate;
+		$this->messageTemplate = $messageTemplate ? $messageTemplate : '{message}';
+		$this->codeTemplate = $codeTemplate ? $codeTemplate : '{code}';
+		$this->fileTemplate = $fileTemplate ? $fileTemplate : '{file}';
+		$this->lineTemplate = $lineTemplate ? $lineTemplate : '{line}';
 	}
 
+	// TODO: require Exception::getTrace analog
 	protected function make() {
 		$class = $this->exceptionClass;
-		$exception = new $class($this->messageTemplate->compile(), defined($this->typeTemplate->compile()) ? constant($this->typeTemplate->compile()) : (int)$this->typeTemplate->compile());
-		$this->setProtectedPropertyValue($exception, 'file', $this->fileTemplate->compile());
-		$this->setProtectedPropertyValue($exception, 'line', $this->lineTemplate->compile());
+		$exception = new $class($this->eventspace->fetch($this->messageTemplate), (int)$this->eventspace->fetch($this->codeTemplate));
+		$this->setProtectedPropertyValue($exception, 'file', $this->eventspace->fetch($this->fileTemplate));
+		$this->setProtectedPropertyValue($exception, 'line', $this->eventspace->fetch($this->lineTemplate));
+		Lagger_Handler::$skipNexInternalException = true;
 		throw $exception;
 	}
 

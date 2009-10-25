@@ -1,12 +1,18 @@
 <?php
 
-class Lagger_ActionPrint extends Lagger_ActionAbstract {
+/**
+ * 
+ * @see http://code.google.com/p/lagger
+ * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
+ * 
+ */
+class Lagger_ActionPrint extends Lagger_Action {
 	
 	protected $buffer;
 	protected $buffering;
 	protected $template;
 
-	public function __construct(Lagger_Template $template, $buffering = false) {
+	public function __construct($template, $buffering = false) {
 		$this->template = $template;
 		$this->buffering = $buffering;
 	}
@@ -20,42 +26,40 @@ class Lagger_ActionPrint extends Lagger_ActionAbstract {
 	}
 
 	protected function make() {
-		if ($this->buffering)
-			$this->buffer[] = $this->template->compile();
-		else
-			$this->show($this->template->compile());
+		if ($this->buffering) {
+			$this->buffer[] = $this->eventspace->fetch($this->template);
+		}
+		else {
+			$this->show($this->eventspace->fetch($this->template));
+		}
 	}
 
-	public function flush($return = false) {
+	public function flush() {
 		if ($this->buffer) {
-			$flush = $return ? implode('', $this->buffer) : null;
-			if (!$return) {
-				
-				foreach ($this->buffer as $string) {
-					$this->show($string);
-				}
+			foreach ($this->buffer as $string) {
+				$this->show($string);
 			}
 			$this->buffer = array();
-			return $flush;
 		}
 	}
 
 	protected function show($string) {
-		if ($ob_level = ob_get_level())
-			for($i = $ob_level; $i > 0; $i--) {
-				$contents[$i] = ob_get_contents();
-				ob_end_clean();
-			}
+		//		if ($ob_level = ob_get_level())
+		//			for($i = $ob_level; $i > 0; $i--) {
+		//				$contents[$i] = ob_get_contents();
+		//				ob_end_clean();
+		//			}
 		
+
 		echo $string;
 		flush();
 		
-		if ($ob_level)
-			for($i = 1; $i <= $ob_level; $i++) {
-				ob_start();
-				echo $contents[$i];
-				flush();
-			}
+	//		if ($ob_level)
+	//			for($i = 1; $i <= $ob_level; $i++) {
+	//				ob_start();
+	//				echo $contents[$i];
+	//				flush();
+	//			}
 	}
 
 	public function __destruct() {

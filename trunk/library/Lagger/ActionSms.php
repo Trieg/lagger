@@ -1,13 +1,19 @@
 <?php
 
-class Lagger_ActionSms extends Lagger_ActionAbstract {
+/**
+ * 
+ * @see http://code.google.com/p/lagger
+ * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
+ * 
+ */
+class Lagger_ActionSms extends Lagger_Action {
 	
 	protected $from;
 	protected $to = array();
 	protected $translit;
 	protected $messageTemplate;
 
-	public function __construct($from, $to, Lagger_Template $messageTemplate, $translit = true) {
+	public function __construct($from, $to, $messageTemplate, $translit = true) {
 		$this->from = $from;
 		$this->to = is_array($to) ? $to : explode(',', $to);
 		$this->messageTemplate = $messageTemplate;
@@ -15,9 +21,13 @@ class Lagger_ActionSms extends Lagger_ActionAbstract {
 	}
 
 	protected function make() {
-		$smsSender = new SmsSender();
 		foreach ($this->to as $to) {
-			$smsSender->send($this->from, trim($to), $this->messageTemplate->compile(), $this->translit);
+			$this->sendSms($this->from, trim($to), $this->eventspace->fetch($this->messageTemplate), $this->translit);
 		}
+	}
+
+	protected function sendSms($from, $to, $message, $translit=false) {
+		$smsSender = new SmsSender();
+		$smsSender->send($from, $to, $message, $translit);
 	}
 }
