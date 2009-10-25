@@ -16,7 +16,10 @@ class Lagger_ActionFileLog extends Lagger_Action {
 	const checkLimit = 100;
 
 	public function __construct($template, $filepath, $sizeLimit = null, $daysLimit = null) {
-		$this->filepath = realpath($filepath);
+		if(!file_exists($filepath)) { // required for realpath function works
+			file_put_contents($filepath, '');
+		}
+		$this->filepath = realpath($filepath); // required for fopen works on script shutdown
 		$this->template = $template;
 		$this->sizeLimit = (int)$sizeLimit;
 		$this->daysLimit = (int)$daysLimit;
