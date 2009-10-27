@@ -34,12 +34,16 @@ class Lagger_ActionPrint extends Lagger_Action {
 		}
 	}
 
-	public function flush() {
+	public function flush($return=false) {
 		if ($this->buffer) {
-			foreach ($this->buffer as $string) {
-				$this->show($string);
-			}
+			$outputString = implode('', $this->bufffer);
 			$this->buffer = array();
+			if($return) {
+				return $outputString;
+			}
+			else {
+				$this->show($outputString);
+			}
 		}
 	}
 
@@ -50,7 +54,6 @@ class Lagger_ActionPrint extends Lagger_Action {
 		//				ob_end_clean();
 		//			}
 		
-
 		echo $string;
 		flush();
 		
