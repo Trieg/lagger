@@ -8,7 +8,7 @@
  */
 class Lagger_ActionPrint extends Lagger_Action {
 	
-	protected $buffer;
+	protected static $buffer;
 	protected $buffering;
 	protected $template;
 
@@ -27,27 +27,27 @@ class Lagger_ActionPrint extends Lagger_Action {
 
 	protected function make() {
 		if ($this->buffering) {
-			$this->buffer[] = $this->eventspace->fetch($this->template);
+			self::$buffer[] = $this->eventspace->fetch($this->template);
 		}
 		else {
-			$this->show($this->eventspace->fetch($this->template));
+			self::show($this->eventspace->fetch($this->template));
 		}
 	}
 
-	public function flush($return=false) {
-		if ($this->buffer) {
-			$outputString = implode(' ', $this->buffer);
-			$this->buffer = array();
+	public static function flush($return=false) {
+		if (self::$buffer) {
+			$outputString = implode(' ', self::$buffer);
+			self::$buffer = array();
 			if($return) {
 				return $outputString;
 			}
 			else {
-				$this->show($outputString);
+				self::show($outputString);
 			}
 		}
 	}
 
-	protected function show($string) {
+	protected static function show($string) {
 		//		if ($ob_level = ob_get_level())
 		//			for($i = $ob_level; $i > 0; $i--) {
 		//				$contents[$i] = ob_get_contents();
@@ -66,6 +66,6 @@ class Lagger_ActionPrint extends Lagger_Action {
 	}
 
 	public function __destruct() {
-		$this->flush();
+		self::flush();
 	}
 }
