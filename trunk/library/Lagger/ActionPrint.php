@@ -36,7 +36,7 @@ class Lagger_ActionPrint extends Lagger_Action {
 
 	public function flush($return=false) {
 		if ($this->buffer) {
-			$outputString = implode('', $this->bufffer);
+			$outputString = implode(' ', $this->buffer);
 			$this->buffer = array();
 			if($return) {
 				return $outputString;
