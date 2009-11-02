@@ -1,3 +1,8 @@
+Release 1.2
+
+* Added: Handling fatal PHP errors
+* Added: Integration with FirePHP http://www.firephp.org
+* Fixed: Lagger_PrintAction don't flush headers any more
 
 Release 1.1
 
