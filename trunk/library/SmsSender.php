@@ -2,7 +2,7 @@
 
 /**
  * 
- * @desc This is class for SMS gateway http://litesms.net
+ * @desc This is class for SMS gateway http://litesms.net/from/partner/liaren.html
  * @see http://code.google.com/p/lagger
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
  * 
