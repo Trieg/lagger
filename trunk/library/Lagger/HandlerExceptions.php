@@ -23,6 +23,7 @@ class Lagger_HandlerExceptions extends Lagger_Handler {
 	public function handle(Exception $exception) {
 		$code = $exception->getCode() ? $exception->getCode() : E_USER_ERROR;
 		
+		$eventTags = 'fatal,exception,'.get_class($exception);
 		$eventVars = array(
 		'message' => $exception->getMessage(),
 		'code' => $code,
@@ -30,7 +31,7 @@ class Lagger_HandlerExceptions extends Lagger_Handler {
 		'file' => $exception->getFile(),
 		'line' => $exception->getLine());
 		
-		$this->handleActions($eventVars, 'fatal');
+		$this->handleActions($eventVars, $eventTags);
 		
 		if ($this->oldExceptionsHandler && $this->callOldExceptionsHandler) {
 			call_user_func_array($this->oldExceptionsHandler, array($exception));
