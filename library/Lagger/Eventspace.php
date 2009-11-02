@@ -107,6 +107,10 @@ class Lagger_Eventspace {
 		$this->varsValues[$varName] = $this->compileVar($this->vars[$varName]);
 		return $this->varsValues[$varName];
 	}
+	
+	public function __get($varName) {
+		return $this->getVarValue($varName);
+	}
 
 	protected function compileVar($var) {
 		if ($var[0] == self::varIsCallback) {
