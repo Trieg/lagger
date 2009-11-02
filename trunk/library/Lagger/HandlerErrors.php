@@ -28,6 +28,14 @@ class Lagger_HandlerErrors extends Lagger_Handler {
 			ini_set($attribute, $value);
 		}
 		$this->oldErrorHandler = set_error_handler(array($this, 'handle'));
+		register_shutdown_function(array($this, 'checkFatalError'));
+	}
+
+	public function checkFatalError() {
+		$error = error_get_last();
+		if ($error && $error['type'] != E_ERROR) {
+			$this->handle($error['type'], $error['message'], $error['file'], $error['line']);
+		}
 	}
 
 	public function handle($code = null, $message = null, $file = null, $line = null) {
@@ -35,12 +43,7 @@ class Lagger_HandlerErrors extends Lagger_Handler {
 			$code = E_USER_ERROR;
 		}
 		$eventTags = isset(self::$codesTags[$code]) ? self::$codesTags[$code] : 'warning';
-		$eventVars = array(
-		'message' => $message, 
-		'code' => $code, 
-		'type' => isset(self::$codesNames[$code]) ? self::$codesNames[$code] : $code, 
-		'file' => $file, 
-		'line' => $line);
+		$eventVars = array('message' => $message, 'code' => $code, 'type' => isset(self::$codesNames[$code]) ? self::$codesNames[$code] : $code, 'file' => $file, 'line' => $line);
 		
 		$this->handleActions($eventVars, $eventTags);
 		

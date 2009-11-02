@@ -8,7 +8,7 @@ define('SKIPER_HASH_TEMPLATE', '{file}{line}');
 
 define('ERRORS_STDOUT', true);
 define('ERRORS_STDOUT_TAGS', null);
-define('ERRORS_STDOUT_TEMPLATE', '<div><b>{type}:</b> {message}<br /><em>{file} [{line}]</em></div>');
+define('ERRORS_STDOUT_TEMPLATE', '<div><font color="red"><b>{type}:</b> {message}<br /><em>{file} [{line}]</em></font></div>');
 define('ERRORS_STDOUT_REWRITE_PIN', null);
 
 define('ERRORS_LOGING', true);
