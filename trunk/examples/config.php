@@ -9,7 +9,6 @@ define('SKIPER_HASH_TEMPLATE', '{file}{line}');
 define('ERRORS_STDOUT', true);
 define('ERRORS_STDOUT_TAGS', null);
 define('ERRORS_STDOUT_TEMPLATE', '<div><font color="red"><b>{type}:</b> {message}<br /><em>{file} [{line}]</em></font></div>');
-define('ERRORS_STDOUT_REWRITE_PIN', null);
 
 define('ERRORS_LOGING', true);
 define('ERRORS_LOGING_TAGS', 'warning,fatal');
@@ -34,7 +33,6 @@ define('ERRORS_EMAIL_MESSAGE', "Date: {date} {time}\nURL: http://{host}{uri}\nEr
 define('DEBUG_STDOUT', true);
 define('DEBUG_STDOUT_TAGS', 'test,high');
 define('DEBUG_STDOUT_TEMPLATE', '<div><font color="green">{message|htmlentities}</font></div>');
-define('DEBUG_STDOUT_REWRITE_PIN', null);
 
 define('DEBUG_LOGING', true);
 define('DEBUG_LOGING_TAGS', 'sql');

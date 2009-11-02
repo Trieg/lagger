@@ -6,7 +6,7 @@
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
  * 
  */
-abstract class Lagger_Action {
+abstract class Lagger_Action{
 	
 	protected $skiper;
 	protected $skiperGroup;

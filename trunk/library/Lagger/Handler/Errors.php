@@ -6,7 +6,7 @@
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
  * 
  */
-class Lagger_HandlerErrors extends Lagger_Handler {
+class Lagger_Handler_Errors extends Lagger_Handler{
 	
 	protected static $codesTags = array(E_ERROR => 'fatal', E_WARNING => 'warning', E_PARSE => 'fatal', E_NOTICE => 'notice', E_CORE_ERROR => 'fatal', E_CORE_WARNING => 'warning', E_COMPILE_ERROR => 'fatal', E_COMPILE_WARNING => 'warning', E_USER_ERROR => 'fatal', E_USER_WARNING => 'warning', E_USER_NOTICE => 'notice');
 	protected static $codesNames = array(E_ERROR => 'E_ERROR', E_WARNING => 'E_WARNING', E_PARSE => 'E_PARSE', E_NOTICE => 'E_NOTICE', E_CORE_ERROR => 'E_CORE_ERROR', E_CORE_WARNING => 'E_CORE_WARNING', E_COMPILE_ERROR => 'E_COMPILE_ERROR', E_COMPILE_WARNING => 'E_COMPILE_WARNING', E_USER_ERROR => 'E_USER_ERROR', E_USER_WARNING => 'E_USER_WARNING', E_USER_NOTICE => 'E_USER_NOTICE');
@@ -28,7 +28,6 @@ class Lagger_HandlerErrors extends Lagger_Handler {
 			ini_set($attribute, $value);
 		}
 		$this->oldErrorHandler = set_error_handler(array($this, 'handle'));
-		// error_reporting(E_ALL);
 		register_shutdown_function(array($this, 'checkFatalError'));
 	}
 
@@ -43,13 +42,13 @@ class Lagger_HandlerErrors extends Lagger_Handler {
 		if (!$code) {
 			$code = E_USER_ERROR;
 		}
-		
+
 		$eventTags = isset(self::$codesTags[$code]) ? self::$codesTags[$code] : 'warning';
 		$eventVars = array(
-		'message' => $message, 
-		'code' => $code, 
+		'message' => $message,
+		'code' => $code,
 		'type' => isset(self::$codesNames[$code]) ? self::$codesNames[$code] : $code, 
-		'file' => $file, 
+		'file' => $file,
 		'line' => $line);
 		
 		$this->handleActions($eventVars, $eventTags);

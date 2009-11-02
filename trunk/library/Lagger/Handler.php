@@ -16,7 +16,6 @@ abstract class Lagger_Handler {
 	protected static $internalErrorsActions = array();
 	
 	const tagSeparator = ',';
-	const rewriteTagsResetVar = '__reset';
 
 	public function __construct(Lagger_Eventspace $eventspace) {
 		$this->eventspace = $eventspace;
@@ -30,10 +29,9 @@ abstract class Lagger_Handler {
 		return $this->eventspace;
 	}
 
-	public function addAction(Lagger_Action $action, $tags = null, $rewriteTagsVar = null, $rewriteTagsAccessPin = null, $rewriteTagsAccessVar = '__pin') {
-		$rewriteTags = $this->checkRewriteTags($rewriteTagsVar, $rewriteTagsAccessPin, $rewriteTagsAccessVar);
-		if ($rewriteTags !== false) {
-			$tags = $rewriteTags;
+	public function addAction(Lagger_Action $action, $tags = null, Lagger_Tagger $tagger = null) {
+		if ($tagger && $tagger->tagsRewrited()) {
+			$tags = $tagger->getNewTags();
 		}
 		if ($tags === '') {
 			$tags = null;
@@ -42,32 +40,6 @@ abstract class Lagger_Handler {
 			$this->actions[] = array('objects' => $action, 'tags' => $tags ? array_map('trim', explode(self::tagSeparator, $tags)) : array());
 		}
 		return $this;
-	}
-
-	protected function checkRewriteTags($rewriteTagsVar, $rewriteTagsAccessPin, $rewriteTagsAccessVar) {
-		if ($rewriteTagsVar) {
-			if (!session_id()) {
-				session_start();
-			}
-			$sessionVar = $rewriteTagsVar . $rewriteTagsAccessVar . $rewriteTagsAccessPin;
-			if (isset($_SESSION[$sessionVar])) {
-				if (isset($_GET[self::rewriteTagsResetVar])) {
-					unset($_SESSION[$sessionVar]);
-					return false;
-				}
-				elseif (isset($_GET[$rewriteTagsVar])) {
-					$_SESSION[$sessionVar] = $_GET[$rewriteTagsVar];
-				}
-				return $_SESSION[$sessionVar];
-			}
-			elseif (isset($_GET[$rewriteTagsVar])) {
-				if (!$rewriteTagsAccessPin || (array_key_exists($rewriteTagsAccessVar, $_GET) && $_GET[$rewriteTagsAccessVar] == $rewriteTagsAccessPin)) {
-					$_SESSION[$sessionVar] = $_GET[$rewriteTagsVar];
-					return $_GET[$rewriteTagsVar];
-				}
-			}
-		}
-		return false;
 	}
 
 	protected function handleActions(array $eventVars, $eventTags = null) {

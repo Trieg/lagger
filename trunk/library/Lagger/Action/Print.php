@@ -6,7 +6,7 @@
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
  * 
  */
-class Lagger_ActionPrint extends Lagger_Action {
+class Lagger_Action_Print extends Lagger_Action{
 	
 	protected static $buffer;
 	protected $buffering;

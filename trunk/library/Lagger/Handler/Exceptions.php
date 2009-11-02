@@ -6,7 +6,7 @@
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
  * 
  */
-class Lagger_HandlerExceptions extends Lagger_Handler {
+class Lagger_Handler_Exceptions extends Lagger_Handler{
 	
 	protected $oldExceptionsHandler;
 	protected $callOldExceptionsHandler;

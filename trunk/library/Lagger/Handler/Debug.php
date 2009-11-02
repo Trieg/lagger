@@ -6,7 +6,7 @@
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
  * 
  */
-class Lagger_HandlerDebug extends Lagger_Handler {
+class Lagger_Handler_Debug extends Lagger_Handler{
 
 	protected $defaultTags = 'message';
 	

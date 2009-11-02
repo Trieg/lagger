@@ -6,7 +6,7 @@
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
  * 
  */
-class Lagger_ActionFileLog extends Lagger_Action {
+class Lagger_Action_FileLog extends Lagger_Action{
 	
 	protected $filepath;
 	protected $template;
