@@ -6,7 +6,7 @@
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
  * 
  */
-class Lagger_ActionException extends Lagger_Action {
+class Lagger_Action_Exception extends Lagger_Action{
 
 	protected $messageTemplate;
 	

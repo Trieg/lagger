@@ -13,7 +13,7 @@ Release 1.1
 * Improved: Defining templates like a strings, not like objects
 * Improved: Lagger_ActionFileLog limits checking only in one of 100 iterations
 * Fixed: Lagger_PrintAction now work correctly on flushing buffer
-* Fixed: Correct tags matching check in Lagger_HandlerDebug
+* Fixed: Correct tags matching check in Lagger_Handler_Debug
 * Fixed: Lagger_Skiper expire time updating when expire check
 
 Release 1.0

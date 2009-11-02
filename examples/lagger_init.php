@@ -39,7 +39,7 @@ $daylySkiper = new Lagger_Skiper($laggerES, SKIPER_HASH_TEMPLATE, SKIPER_EXPIRE,
 	 LAGGER INTERNAL ERRORS AND EXCEPTIONS HANDLING
  **************************************************************/
 
-$emailAction = new Lagger_ActionMail(ERRORS_EMAIL_FROM, ERRORS_EMAIL_TO, ERRORS_EMAIL_SUBJECT, ERRORS_EMAIL_MESSAGE);
+$emailAction = new Lagger_Action_Mail(ERRORS_EMAIL_FROM, ERRORS_EMAIL_TO, ERRORS_EMAIL_SUBJECT, ERRORS_EMAIL_MESSAGE);
 $emailAction->setSkiper($daylySkiper, 'errors_email');
 
 Lagger_Handler::addInternalErrorAction($emailAction);
@@ -48,7 +48,7 @@ Lagger_Handler::addInternalErrorAction($emailAction);
 	 DEBUG HANDLER
  **************************************************************/
 
-$debug = new Lagger_HandlerDebug($laggerES);
+$debug = new Lagger_Handler_Debug($laggerES);
 
 function toDebug($message, $tags = null) {
 	if (isset($GLOBALS['debug'])) {
@@ -57,38 +57,41 @@ function toDebug($message, $tags = null) {
 }
 
 if (DEBUG_STDOUT) {
-	$debug->addAction(new Lagger_ActionPrint(DEBUG_STDOUT_TEMPLATE), DEBUG_STDOUT_TAGS, '__debug', DEBUG_STDOUT_REWRITE_PIN);
-	$debug->addAction(new Lagger_ActionFirePhp('{message}', '{tags}', FirePHP::INFO), DEBUG_STDOUT_TAGS, '__debug', DEBUG_STDOUT_REWRITE_PIN);
+	// Allows to rewrite DEBUG_STDOUT_TAGS. Try $_GET['__debug'] = 'high' or $_GET['__debug'] = ''
+	$debugTagger = new Lagger_Tagger('__debug'); 
+
+	$debug->addAction(new Lagger_Action_Print(DEBUG_STDOUT_TEMPLATE), DEBUG_STDOUT_TAGS, $debugTagger);
+	$debug->addAction(new Lagger_Action_FirePhp('{message}', '{tags}', FirePHP::INFO), DEBUG_STDOUT_TAGS, $debugTagger);
 }
 if (DEBUG_LOGING) {
-	$debug->addAction(new Lagger_ActionFileLog(DEBUG_LOGING_TEMPLATE, DEBUG_LOGING_FILEPATH, DEBUG_LOGING_LIMIT_SIZE, DEBUG_LOGING_LIMIT_DAYS), DEBUG_LOGING_TAGS, '__deblog', DEBUG_STDOUT_REWRITE_PIN);
+	$debug->addAction(new Lagger_Action_FileLog(DEBUG_LOGING_TEMPLATE, DEBUG_LOGING_FILEPATH, DEBUG_LOGING_LIMIT_SIZE, DEBUG_LOGING_LIMIT_DAYS), DEBUG_LOGING_TAGS);
 }
 
 /**************************************************************
 	 ERRORS AND EXCEPTIONS HANDLERS
  **************************************************************/
 
-$errors = new Lagger_HandlerErrors($laggerES);
-$exceptions = new Lagger_HandlerExceptions($laggerES);
+$errors = new Lagger_Handler_Errors($laggerES);
+$exceptions = new Lagger_Handler_Exceptions($laggerES);
 
 if (ERRORS_STDOUT) {
-	$printAction = new Lagger_ActionPrint(ERRORS_STDOUT_TEMPLATE, false);
-	$errors->addAction($printAction, ERRORS_STDOUT_TAGS, '__errors', ERRORS_STDOUT_REWRITE_PIN);
-	$exceptions->addAction($printAction, ERRORS_STDOUT_TAGS, '__errors', ERRORS_STDOUT_REWRITE_PIN);
+	$printAction = new Lagger_Action_Print(ERRORS_STDOUT_TEMPLATE, false);
+	$errors->addAction($printAction);
+	$exceptions->addAction($printAction);
 	
-	$errorsFirePhpAction = new Lagger_ActionFirePhp('{message} {file} [{line}]', '{type}', FirePHP::ERROR);
-	$errors->addAction($errorsFirePhpAction, ERRORS_STDOUT_TAGS, '__errors', ERRORS_STDOUT_REWRITE_PIN);
-	$exceptions->addAction($errorsFirePhpAction, ERRORS_STDOUT_TAGS, '__errors', ERRORS_STDOUT_REWRITE_PIN);
+	$errorsFirePhpAction = new Lagger_Action_FirePhp('{message} {file} [{line}]', '{type}', FirePHP::ERROR);
+	$errors->addAction($errorsFirePhpAction);
+	$exceptions->addAction($errorsFirePhpAction);
 }
 
 if (ERRORS_LOGING) {
-	$logAction = new Lagger_ActionFileLog(ERRORS_LOGING_TEMPLATE, ERRORS_LOGING_FILEPATH, ERRORS_LOGING_LIMIT_SIZE, ERRORS_LOGING_LIMIT_DAYS);
+	$logAction = new Lagger_Action_FileLog(ERRORS_LOGING_TEMPLATE, ERRORS_LOGING_FILEPATH, ERRORS_LOGING_LIMIT_SIZE, ERRORS_LOGING_LIMIT_DAYS);
 	$errors->addAction($logAction, ERRORS_LOGING_TAGS);
 	$exceptions->addAction($logAction, ERRORS_LOGING_TAGS);
 }
 
 if (ERRORS_SMS) {
-	$smsAction = new Lagger_ActionSms(ERRORS_SMS_FROM, ERRORS_SMS_TO, ERRORS_SMS_MESSAGE, true);
+	$smsAction = new Lagger_Action_Sms(ERRORS_SMS_FROM, ERRORS_SMS_TO, ERRORS_SMS_MESSAGE, true);
 	$smsAction->setSkiper($daylySkiper, 'errors_sms');
 	$errors->addAction($smsAction, ERRORS_SMS_TAGS);
 	$exceptions->addAction($smsAction, ERRORS_SMS_TAGS);

@@ -6,7 +6,7 @@
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
  * 
  */
-class Lagger_ActionMail extends Lagger_Action {
+class Lagger_Action_Mail extends Lagger_Action{
 	
 	protected $from;
 	protected $to;

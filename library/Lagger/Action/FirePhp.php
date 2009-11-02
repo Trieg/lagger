@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'FirePHPCore'.DIRECTORY_SEPARATOR.'FirePHP.class.php');
+require_once(dirname(dirname(dirname(__FILE__))).DIRECTORY_SEPARATOR.'FirePHPCore'.DIRECTORY_SEPARATOR.'FirePHP.class.php');
 
 /**
  * @desc Print error in FirePHP http://www.firephp.org
@@ -8,7 +8,7 @@ require_once(dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'FirePHPCore'.DIRECT
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
  * 
  */
-class Lagger_ActionFirePhp extends Lagger_Action {
+class Lagger_Action_FirePhp extends Lagger_Action{
 
 	protected $messageTemplate;
 	protected $labelTemplate;
