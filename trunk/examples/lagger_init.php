@@ -58,6 +58,7 @@ function toDebug($message, $tags = null) {
 
 if (DEBUG_STDOUT) {
 	$debug->addAction(new Lagger_ActionPrint(DEBUG_STDOUT_TEMPLATE), DEBUG_STDOUT_TAGS, '__debug', DEBUG_STDOUT_REWRITE_PIN);
+	$debug->addAction(new Lagger_ActionFirePhp('{message}', '{tags}', FirePHP::INFO), DEBUG_STDOUT_TAGS, '__debug', DEBUG_STDOUT_REWRITE_PIN);
 }
 if (DEBUG_LOGING) {
 	$debug->addAction(new Lagger_ActionFileLog(DEBUG_LOGING_TEMPLATE, DEBUG_LOGING_FILEPATH, DEBUG_LOGING_LIMIT_SIZE, DEBUG_LOGING_LIMIT_DAYS), DEBUG_LOGING_TAGS, '__deblog', DEBUG_STDOUT_REWRITE_PIN);
@@ -74,6 +75,10 @@ if (ERRORS_STDOUT) {
 	$printAction = new Lagger_ActionPrint(ERRORS_STDOUT_TEMPLATE, false);
 	$errors->addAction($printAction, ERRORS_STDOUT_TAGS, '__errors', ERRORS_STDOUT_REWRITE_PIN);
 	$exceptions->addAction($printAction, ERRORS_STDOUT_TAGS, '__errors', ERRORS_STDOUT_REWRITE_PIN);
+	
+	$errorsFirePhpAction = new Lagger_ActionFirePhp('{message} {file} [{line}]', '{type}', FirePHP::ERROR);
+	$errors->addAction($errorsFirePhpAction, ERRORS_STDOUT_TAGS, '__errors', ERRORS_STDOUT_REWRITE_PIN);
+	$exceptions->addAction($errorsFirePhpAction, ERRORS_STDOUT_TAGS, '__errors', ERRORS_STDOUT_REWRITE_PIN);
 }
 
 if (ERRORS_LOGING) {

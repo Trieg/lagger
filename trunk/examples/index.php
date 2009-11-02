@@ -23,7 +23,6 @@ $blahamuha = $some['unkownVar'];
 echo '<h3>Some E_WARNING php error</h3>'; 
 file_get_contents('blahamuha.txt');
 
-
 echo '<h3>If you catch all exceptions to show user error page, so you should do it like this</h3>'; 
 try {
 	throw new Exception('There is some catched exception');

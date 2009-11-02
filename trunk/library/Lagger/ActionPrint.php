@@ -48,21 +48,7 @@ class Lagger_ActionPrint extends Lagger_Action {
 	}
 
 	protected static function show($string) {
-		//		if ($ob_level = ob_get_level())
-		//			for($i = $ob_level; $i > 0; $i--) {
-		//				$contents[$i] = ob_get_contents();
-		//				ob_end_clean();
-		//			}
-		
 		echo $string;
-		flush();
-		
-	//		if ($ob_level)
-	//			for($i = 1; $i <= $ob_level; $i++) {
-	//				ob_start();
-	//				echo $contents[$i];
-	//				flush();
-	//			}
 	}
 
 	public function __destruct() {

@@ -50,17 +50,17 @@ abstract class Lagger_Handler {
 				session_start();
 			}
 			$sessionVar = $rewriteTagsVar . $rewriteTagsAccessVar . $rewriteTagsAccessPin;
-			if (array_key_exists($sessionVar, $_SESSION)) {
+			if (isset($_SESSION[$sessionVar])) {
 				if (isset($_GET[self::rewriteTagsResetVar])) {
 					unset($_SESSION[$sessionVar]);
 					return false;
 				}
-				elseif (array_key_exists($rewriteTagsVar, $_GET)) {
+				elseif (isset($_GET[$rewriteTagsVar])) {
 					$_SESSION[$sessionVar] = $_GET[$rewriteTagsVar];
 				}
 				return $_SESSION[$sessionVar];
 			}
-			elseif (array_key_exists($rewriteTagsVar, $_GET)) {
+			elseif (isset($_GET[$rewriteTagsVar])) {
 				if (!$rewriteTagsAccessPin || (array_key_exists($rewriteTagsAccessVar, $_GET) && $_GET[$rewriteTagsAccessVar] == $rewriteTagsAccessPin)) {
 					$_SESSION[$sessionVar] = $_GET[$rewriteTagsVar];
 					return $_GET[$rewriteTagsVar];
