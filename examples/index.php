@@ -9,7 +9,6 @@ toDebug('Debug message with tag "high"', 'high'); // will be not printed
 toDebug('Debug message with tags "high,test"', 'high,test'); // will be printed
 toDebug('Debug message with tags "high,test,database"', 'high,test,database'); // will be printed
 
-
 // Debug by tag 'sql'. Check output in '\examples\logs\debug_sql_log.csv', open with Microsoft Excel or Open office 
 $sql = 'SELECT * FROM users';
 toDebug($sql, 'sql,start');usleep(300); // exec sql query
