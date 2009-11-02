@@ -37,7 +37,7 @@ $errors->addAction(new Lagger_ActionException(), 'notice,warning,fatal');
 try {
 	file_get_contents('blahamuha.txt'); // some E_WARNING php error
 }
-catch (Lagger_PhpErrorException $e) {
+catch (ErrorException $e) {
 	$exceptions->handle($e);
 }
 
