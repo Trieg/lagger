@@ -8,18 +8,20 @@ toDebug('Debug message with default tag "message"'); // will be not printed
 toDebug('Debug message with tag "high"', 'high'); // will be not printed
 toDebug('Debug message with tags "high,test"', 'high,test'); // will be printed
 toDebug('Debug message with tags "high,test,database"', 'high,test,database'); // will be printed
+toDebug('Oops, lagger did it again :)', 'speak'); // will be not printed, but you will hear it (if PHP installed on Windows)
+
+echo '<br><b>You can override tags rules for debug output by __debug parameter in GET:</b></br>
+<a href="?__debug=">Show all</a><br />
+<a href="?__debug=high,test,database">Show only tags "high,test,database"</a><br />
+<a href="?__reset">Reset to config settings</a><br />'; 
 
 // Debug by tag 'sql'. Check output in '\examples\logs\debug_sql_log.csv', open with Microsoft Excel or Open office 
 $sql = 'SELECT * FROM users';
 toDebug($sql, 'sql,start');usleep(300); // exec sql query
 toDebug($sql, 'sql,finish');
 
-
-echo '<h3>Some E_NOTICE PHP error</h3>'; 
+echo '<h3>Some PHP errors</h3>'; 
 $blahamuha = $some['unkownVar'];
-
-
-echo '<h3>Some E_WARNING PHP error</h3>'; 
 file_get_contents('blahamuha.txt');
 
 echo '<h3>If you catch all exceptions to show user error page, so you should do it like this</h3>'; 

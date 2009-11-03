@@ -67,6 +67,11 @@ if (DEBUG_LOGING) {
 	$debug->addAction(new Lagger_Action_FileLog(DEBUG_LOGING_TEMPLATE, DEBUG_LOGING_FILEPATH, DEBUG_LOGING_LIMIT_SIZE, DEBUG_LOGING_LIMIT_DAYS), DEBUG_LOGING_TAGS);
 }
 
+// Just for fun in windows servers it will speak the text :)
+if(stristr(PHP_OS, 'win') !== false) {
+	$debug->addAction(new Lagger_Action_WinSpeak('{message}', 50), 'speak');
+}
+
 /**************************************************************
 	 ERRORS AND EXCEPTIONS HANDLERS
  **************************************************************/
