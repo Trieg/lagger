@@ -4,8 +4,6 @@
 == config.php ==
 
 {{{
-define('LOGS_DIR', 'logs');
-
 define('SKIPER_DIR', LOGS_DIR . DIRECTORY_SEPARATOR . 'skip');
 define('SKIPER_EXPIRE', 60 * 60 * 24);
 define('SKIPER_HASH_TEMPLATE', '{file}{line}');
@@ -43,7 +41,7 @@ define('DEBUG_LOGING_TAGS', 'sql');
 define('DEBUG_LOGING_FILEPATH', LOGS_DIR . DIRECTORY_SEPARATOR . 'debug_sql_log.csv');
 define('DEBUG_LOGING_LIMIT_SIZE', 500000);
 define('DEBUG_LOGING_LIMIT_DAYS', 7);
-define('DEBUG_LOGING_TEMPLATE', "{date} {time};{process_id|csv};{microtime|csv};{message|trim|csv}\n");
+define('DEBUG_LOGING_TEMPLATE', "{date} {time};{process_id|csv};{microtime|csv};{tags|csv};{message|trim|csv}\n");
 }}}
 
 == lagger_init.php ===
@@ -116,6 +114,11 @@ if (DEBUG_LOGING) {
   $debug->addAction(new Lagger_Action_FileLog(DEBUG_LOGING_TEMPLATE, DEBUG_LOGING_FILEPATH, DEBUG_LOGING_LIMIT_SIZE, DEBUG_LOGING_LIMIT_DAYS), DEBUG_LOGING_TAGS);
 }
 
+// Just for fun in windows servers it will speak the text :)
+if(stristr(PHP_OS, 'win') !== false) {
+  $debug->addAction(new Lagger_Action_WinSpeak('{message}', 100), 'speak');
+}
+
 /**************************************************************
    ERRORS AND EXCEPTIONS HANDLERS
  **************************************************************/
@@ -162,6 +165,12 @@ toDebug('Debug message with default tag "message"'); // will be not printed
 toDebug('Debug message with tag "high"', 'high'); // will be not printed
 toDebug('Debug message with tags "high,test"', 'high,test'); // will be printed
 toDebug('Debug message with tags "high,test,database"', 'high,test,database'); // will be printed
+toDebug('Oops, lagger did it again :)', 'speak'); // will be not printed, but you will hear it (if PHP installed on Windows)
+
+echo '<br><b>You can override tags for debug output by __debug parameter in GET:</b></br>
+<a href="?__debug=">Show all</a><br />
+<a href="?__debug=high,test,database">Show only tags "high,test,database"</a><br />
+<a href="?__reset">Reset to config settings</a><br />'; 
 
 // Debug by tag 'sql'. Check output in '\examples\logs\debug_sql_log.csv', open with Microsoft Excel or Open office 
 $sql = 'SELECT * FROM users';
@@ -169,12 +178,8 @@ toDebug($sql, 'sql,start');
 usleep(300); // exec sql query
 toDebug($sql, 'sql,finish');
 
-
-echo '<h3>Some E_NOTICE PHP error</h3>'; 
+echo '<h3>Some PHP errors</h3>'; 
 $blahamuha = $some['unkownVar'];
-
-
-echo '<h3>Some E_WARNING PHP error</h3>'; 
 file_get_contents('blahamuha.txt');
 
 echo '<h3>If you catch all exceptions to show user error page, so you should do it like this</h3>'; 
