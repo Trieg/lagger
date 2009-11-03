@@ -10,7 +10,7 @@ toDebug('Debug message with tags "high,test"', 'high,test'); // will be printed
 toDebug('Debug message with tags "high,test,database"', 'high,test,database'); // will be printed
 toDebug('Oops, lagger did it again :)', 'speak'); // will be not printed, but you will hear it (if PHP installed on Windows)
 
-echo '<br><b>You can override tags rules for debug output by __debug parameter in GET:</b></br>
+echo '<br><b>You can override tags for debug output by __debug parameter in GET:</b></br>
 <a href="?__debug=">Show all</a><br />
 <a href="?__debug=high,test,database">Show only tags "high,test,database"</a><br />
 <a href="?__reset">Reset to config settings</a><br />'; 
