@@ -30,9 +30,10 @@ class SmsSender {
 		$request = array(
 		'action' => 'send_sms',
 		'phone' => $to,
+		'translit' => (int)$translit,
 		'message' => $translit ? $this->translit($message) : $message,
 		'from' => $from);
-		return;
+
 		$response = $this->makeRequest($request);
 		if (preg_match('/Message_ID=(.+)$/u', $response, $m)) {
 			return $m[1];
