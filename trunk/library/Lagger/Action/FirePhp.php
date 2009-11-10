@@ -26,10 +26,4 @@ class Lagger_Action_FirePhp extends Lagger_Action{
 	protected function make() {
 		FirePHP::getInstance(true)->fb($this->eventspace->fetch($this->messageTemplate), $this->eventspace->fetch($this->labelTemplate), $this->labelType);
 	}
-	
-	public function __destruct() {
-		for($i=ob_get_level(); $i; $i--) {
-			ob_end_flush();
-		}
-	}
 }
