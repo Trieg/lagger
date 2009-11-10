@@ -81,12 +81,12 @@ $exceptions = new Lagger_Handler_Exceptions($laggerES);
 
 if (ERRORS_STDOUT) {
 	$printAction = new Lagger_Action_Print(ERRORS_STDOUT_TEMPLATE, false);
-	$errors->addAction($printAction);
-	$exceptions->addAction($printAction);
+	$errors->addAction($printAction, ERRORS_STDOUT_TAGS);
+	$exceptions->addAction($printAction, ERRORS_STDOUT_TAGS);
 	
 	$errorsFirePhpAction = new Lagger_Action_FirePhp('{message} {file} [{line}]', '{type}', FirePHP::ERROR);
-	$errors->addAction($errorsFirePhpAction);
-	$exceptions->addAction($errorsFirePhpAction);
+	$errors->addAction($errorsFirePhpAction, ERRORS_STDOUT_TAGS);
+	$exceptions->addAction($errorsFirePhpAction, ERRORS_STDOUT_TAGS);
 }
 
 if (ERRORS_LOGING) {
