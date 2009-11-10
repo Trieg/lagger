@@ -30,6 +30,7 @@ class Lagger_Handler_Exceptions extends Lagger_Handler{
 		'type' => get_class($exception),
 		'file' => $exception->getFile(),
 		'line' => $exception->getLine(),
+		'trace' => $exception->getTraceAsString(),
 		'exception' => $exception);
 		
 		$this->handleActions($eventVars, $eventTags);
