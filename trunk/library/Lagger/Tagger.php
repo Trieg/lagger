@@ -26,7 +26,9 @@ class Lagger_Tagger {
 
 	protected function getRewriteSession() {
 		if (isset($_COOKIE[session_name()])) {
-			session_start();
+			if(!session_id()) {
+				session_start();
+			}
 			return isset($_SESSION[self::sessionVar]) ? $_SESSION[self::sessionVar] : null;
 		}
 	}
