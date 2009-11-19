@@ -114,10 +114,11 @@ class Lagger_Eventspace {
 
 	protected function compileVar($var) {
 		if ($var[0] == self::varIsCallback) {
-			return call_user_func_array($var[1], $var[2]);
+			$value = call_user_func_array($var[1], $var[2]);
 		}
-		elseif ($var[0] == self::varIsValue) {
-			return is_scalar($var[1]) || is_null($var[1]) ? $var[1] : var_export($var[1], true);
+		else { // if ($var[0] == self::varIsValue)
+			$value = $var[1];
 		}
+		return is_scalar($value) || is_null($value) ? $value : var_export($value, true);
 	}
 }
