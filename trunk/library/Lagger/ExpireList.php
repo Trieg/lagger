@@ -14,14 +14,15 @@ class Lagger_ExpireList {
 	const checkAllExpires = 100;
 
 	public function __construct($storageDir, $entryPostfix = '.expire') {
-		$this->storageDir = realpath($storageDir) . DIRECTORY_SEPARATOR;
-		$this->entryPostfix = $entryPostfix;
-		if (!is_dir($this->storageDir) && !@mkdir($this->storageDir, 0755, true)) {
-			throw new Exception('Directory "' . $this->storageDir . '" not found');
+		if (!is_dir($storageDir) && !@mkdir($storageDir, 0755, true)) {
+			throw new Exception('Directory "' . $storageDir . '" not found and cannot be created');
 		}
 		if (!mt_rand(0, self::checkAllExpires)) {
 			$this->checkAllExpired();
 		}
+		
+		$this->entryPostfix = $entryPostfix;
+		$this->storageDir = rtrim($storageDir, '\\/')  . DIRECTORY_SEPARATOR;
 	}
 
 	public function isExpired($key, $entryPrefix = null) {
