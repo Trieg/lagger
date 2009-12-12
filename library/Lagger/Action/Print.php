@@ -8,13 +8,18 @@
  */
 class Lagger_Action_Print extends Lagger_Action{
 	
-	protected static $buffer;
-	protected $buffering;
 	protected $template;
+	protected $buffering;
+	
+	protected static $buffer;
 
-	public function __construct($template, $buffering = false) {
+	public function __construct($template, $buffering = false, $flushBufferOnExit = true) {
 		$this->template = $template;
 		$this->buffering = $buffering;
+		
+		if($flushBufferOnExit) {
+			register_shutdown_function(array('Lagger_Action_Print', 'flush'));
+		}
 	}
 
 	public function startBuffering() {
@@ -49,9 +54,5 @@ class Lagger_Action_Print extends Lagger_Action{
 
 	protected static function show($string) {
 		echo $string;
-	}
-
-	public function __destruct() {
-		self::flush();
 	}
 }
