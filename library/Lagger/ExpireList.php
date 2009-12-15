@@ -54,8 +54,8 @@ class Lagger_ExpireList {
 					$entries[] = $this->storageDir . $file;
 				}
 			}
+			closedir($handle);
 		}
-		closedir($handle);
 		return $entries;
 	}
 

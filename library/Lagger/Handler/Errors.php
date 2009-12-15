@@ -39,6 +39,9 @@ class Lagger_Handler_Errors extends Lagger_Handler{
 	}
 
 	public function handle($code = null, $message = null, $file = null, $line = null) {
+		if (error_reporting() == 0) { // if error has been supressed with an @
+			return;
+    }
 		if (!$code) {
 			$code = E_USER_ERROR;
 		}
