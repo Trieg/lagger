@@ -54,5 +54,21 @@ class Lagger_Action_Print extends Lagger_Action{
 
 	protected static function show($string) {
 		echo $string;
+		flush();
+	}
+	
+	public static function flushToHtmlBody($html, $return=false) {
+		if(preg_match('/<body.*?>/i', $html)) {
+			$result = preg_replace('/(<body.*?>)/i', '\\1'.self::flush(true), $html, 1);
+		}
+		else {
+			$result = self::flush(true).$html;
+		}
+		if($return) {
+			return $result;
+		}
+		else {
+			self::show($result);
+		}
 	}
 }
