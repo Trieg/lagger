@@ -89,6 +89,9 @@ if (ERRORS_STDOUT) {
 	$exceptions->addAction($errorsFirePhpAction, ERRORS_STDOUT_TAGS);
 }
 
+$fatalPrintAction = new Lagger_Action_Print('<font color="red">Our site is FATALY dead, please check it again next summer, when we will fix it', false);
+$errors->addAction($fatalPrintAction, 'fatal');
+
 if (ERRORS_LOGING) {
 	$logAction = new Lagger_Action_FileLog(ERRORS_LOGING_TEMPLATE, ERRORS_LOGING_FILEPATH, ERRORS_LOGING_LIMIT_SIZE, ERRORS_LOGING_LIMIT_DAYS);
 	$errors->addAction($logAction, ERRORS_LOGING_TAGS);
