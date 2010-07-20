@@ -43,5 +43,5 @@ catch (ErrorException $e) {
 }
 
 echo '<h3>But otherwise not catched exceptions will break the script</h3>';
-file_get_contents('blahamuha_cikatuha.txt'); // some E_WARNING PHP error
-echo 'So, this text will be never printed';
+unkown_function('blahamuha kaput'); // some fatal error
+echo 'So, this text will be never printed, but otherwise fatal error message will be in log file';
