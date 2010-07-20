@@ -22,7 +22,7 @@ class Lagger_ExpireList {
 		}
 		
 		$this->entryPostfix = $entryPostfix;
-		$this->storageDir = rtrim($storageDir, '\\/')  . DIRECTORY_SEPARATOR;
+		$this->storageDir = realpath($storageDir) . DIRECTORY_SEPARATOR;
 	}
 
 	public function isExpired($key, $entryPrefix = null) {
