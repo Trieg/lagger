@@ -50,6 +50,7 @@ abstract class Lagger_Handler {
 				$eventVars['handler'] = get_class($this);
 			}
 			$this->eventspace->resetVarsValues($eventVars);
+			$throwException = null;
 			foreach ($this->getActionsByTags($eventTags) as $action) {
 				try {
 					$this->currentAction = $action['objects'];
@@ -58,13 +59,17 @@ abstract class Lagger_Handler {
 				catch (Exception $e) {
 					if (self::$skipNexInternalException) {
 						self::$skipNexInternalException = false;
-						$this->handling = false;
-						throw $e;
+						$throwException = $e;
 					}
-					self::handleInternalError($this->eventspace, get_class($e), 'There is internal error during handling "' . get_class($this->currentAction) . '": ' . print_r($e, true));
+					else {
+						self::handleInternalError($this->eventspace, get_class($e), 'There is internal error during handling "' . get_class($this->currentAction) . '": ' . print_r($e, true));
+					}
 				}
 			}
 			$this->handling = false;
+			if($throwException) {
+				throw $throwException;
+			}
 		}
 	}
 
