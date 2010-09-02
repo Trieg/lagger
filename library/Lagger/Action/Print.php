@@ -54,7 +54,6 @@ class Lagger_Action_Print extends Lagger_Action{
 
 	protected static function show($string) {
 		echo $string;
-		flush();
 	}
 	
 	public static function flushToHtmlBody($html, $return=false) {

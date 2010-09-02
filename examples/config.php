@@ -1,5 +1,8 @@
 <?php
 
+// USING CONSTANTS IS NOT REQUIRED!
+// CHECK lagger_init.php ABOUT HOW LAGGER IS CONFIGURED
+
 define('LOGS_DIR', 'logs');
 
 define('SKIPER_DIR', LOGS_DIR . DIRECTORY_SEPARATOR . 'skip');

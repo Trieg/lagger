@@ -10,6 +10,11 @@ abstract class Lagger_Action {
 	
 	protected $skiper;
 	protected $skiperGroup;
+	
+	/**
+	 * @var Lagger_Eventspace
+	 */
+	protected $eventspace;
 
 	public function callMake(Lagger_Eventspace $eventspace) {
 		$this->eventspace = $eventspace;
