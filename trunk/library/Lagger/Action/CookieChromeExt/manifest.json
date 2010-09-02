@@ -1,0 +1,10 @@
+{
+   "content_scripts": [ {
+      "js": [ "script.js" ],
+      "matches": [ "http://*/*", "https://*/*" ]
+   } ],
+   "converted_from_user_script": true,
+   "description": "mouseover to animate thumbs",
+   "name": "Lagger console debugger",
+   "version": "1.0"
+}

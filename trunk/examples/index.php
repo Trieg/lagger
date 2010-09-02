@@ -1,16 +1,23 @@
 <?php
 
+ob_start();
+
+
 require_once ('config.php');
 require_once ('lagger_init.php');
 
 echo '<h3>Simple debug messages (default tag is "message"). <br />Tags output is configured in: define("DEBUG_STDOUT_TAGS", "test,high")</h3>'; 
+
 toDebug('Debug message with default tag "message"'); // will be not printed
 toDebug('Debug message with tag "high"', 'high'); // will be not printed
 toDebug('Debug message with tags "high,test"', 'high,test'); // will be printed
+if(headers_sent()) {
+die('asd');
+}
 toDebug('Debug message with tags "high,test,database"', 'high,test,database'); // will be printed
 toDebug('Oops, lagger did it again :)', 'speak'); // will be not printed, but you will hear it (if PHP installed on Windows)
 
-echo '<br><b>You can override tags for debug output by __debug parameter in GET:</b></br>
+echo '<br /><b>You can override tags for debug output by __debug parameter in GET:</b><br />
 <a href="?__debug=">Show all</a><br />
 <a href="?__debug=high,test,database">Show only tags "high,test,database"</a><br />
 <a href="?__reset">Reset to config settings</a><br />'; 
@@ -30,7 +37,7 @@ try {
 }
 catch (Exception $e) {
 	$exceptions->handle($e);
-	echo 'Hi, user! <br>There is some problem with our server, check it up tomorrow or better in next summer';
+	echo 'Hi, user! <br />There is some problem with our server, check it up tomorrow or better in next summer';
 }
 
 echo '<h3>You can set Lagger to generate Exceptions on PHP errors</h3>';

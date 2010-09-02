@@ -6,12 +6,12 @@
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
  * 
  */
-class Lagger_Handler_Debug extends Lagger_Handler{
-
-	protected $defaultTags = 'message';
+class Lagger_Handler_Debug extends Lagger_Handler {
 	
-	public function handle($message = null, $tags = null) {		
-		$this->handleActions(array('message' => $message), $tags ? $tags : $this->defaultTags);
+	const defaultTags = 'debug';
+
+	public function handle($message = null, $tags = self::defaultTags) {
+		$this->handleActions(array('message' => $message, 'type' => $tags), $tags);
 	}
 
 	protected function isTagsMatches($actionTags, $eventTags) {
