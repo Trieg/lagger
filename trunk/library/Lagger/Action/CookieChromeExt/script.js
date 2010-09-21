@@ -11,9 +11,6 @@ function isEnabled() {
 }
 
 function getDebugMessagesFromCookies() {
-	if(!focused) {
-		return;
-	}
 	var regexp = new RegExp(';\\s*(phd_(.*?)_(.*?))=([^;]+)', 'g');
 	var _messages = [];
 	var _order = []; 
@@ -27,7 +24,7 @@ function getDebugMessagesFromCookies() {
 	}
 	_order.sort();
 	for(var i in _order) {
-		document.cookie = _messages[_order[i]].cookie + '=; expires=Thu, 01-Jan-70 00:00:01 GMT;';
+		document.cookie = _messages[_order[i]].cookie + '=; expires=Thu, 01-Jan-70 00:00:01 GMT;path=/;';
 		var message = _messages[_order[i]];
 		if(message.type == 'error') {
 			console.error(message.text);
