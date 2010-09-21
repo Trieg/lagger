@@ -1,5 +1,8 @@
-
 if(isEnabled()) {
+	focused=true;
+	window.onfocus = function() { focused=true; };
+	window.onblur = function() { focused=false; };
+	
 	setInterval(getDebugMessagesFromCookies, 1000);
 }
 
@@ -8,6 +11,9 @@ function isEnabled() {
 }
 
 function getDebugMessagesFromCookies() {
+	if(!focused) {
+		return;
+	}
 	var regexp = new RegExp(';\\s*(phd_(.*?)_(.*?))=([^;]+)', 'g');
 	var _messages = [];
 	var _order = []; 
