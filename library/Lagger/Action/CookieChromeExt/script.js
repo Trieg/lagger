@@ -11,6 +11,9 @@ function isEnabled() {
 }
 
 function getDebugMessagesFromCookies() {
+	if(!focused) {
+		return true;
+	}
 	var regexp = new RegExp(';\\s*(phd_(.*?)_(.*?))=([^;]+)', 'g');
 	var _messages = [];
 	var _order = []; 
