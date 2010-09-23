@@ -77,7 +77,7 @@ class Lagger_Action_Cookie extends Lagger_Action {
 		// if(headers_sent(&$file, &$line)) {
 			// throw new Exception('You cannot use Lagger_Action_Cookie when headers are sent ('.$file.':'.$line.'). Try to use ob_start() to prevent this');
 		// }
-		setcookie('phd_' . $this->type . '_' . $this->getEventIndex(), $this->eventspace->fetch($this->template), time() + $this->lifetime);
+		setcookie('phd_' . $this->type . '_' . $this->getEventIndex(), $this->eventspace->fetch($this->template), time() + $this->lifetime, '/');
 	}
 
 	protected function getEventIndex() {
