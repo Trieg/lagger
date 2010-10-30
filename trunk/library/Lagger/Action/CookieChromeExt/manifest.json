@@ -4,7 +4,7 @@
       "matches": [ "http://*/*", "https://*/*" ]
    } ],
    "converted_from_user_script": true,
-   "description": "mouseover to animate thumbs",
-   "name": "Lagger console debugger",
+   "description": "Send PHP errors and debugs to Google Chrome console",
+   "name": "PHP Console",
    "version": "1.0"
 }
