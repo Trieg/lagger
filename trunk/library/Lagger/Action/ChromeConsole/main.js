@@ -22,7 +22,7 @@ function isEnabledOnClient() {
 
 function setEnabledOnClient() {
 	document.cookie = 'phpcslc=1; path=/;';
-	document.location = document.location;
+	window.location = document.location;
 }
 
 function isEnabled() {
@@ -47,16 +47,13 @@ function getMessagesFromCookies() {
 	var _messages = [];
 	var _order = [];
 	while ((m = regexp.exec(';' + document.cookie + ';')) != null) {
-		eval('var _message = ' + decodeURIComponent(m[3]).replace(/\+/g, ' '));
-		_message.cookie = m[1];
-		_messages[m[2]] = _message;
+		eval('_messages[m[2]] = ' + decodeURIComponent(m[3]).replace(/\+/g, ' '));
+		document.cookie = m[1] + '=0; expires=Thu, 01-Jan-70 00:00:01 GMT;path=/;';
 		_order.push(m[2]);
 	}
 	_order.sort();
 	for ( var i in _order) {
 		var message = _messages[_order[i]];
-		document.cookie = message.cookie + '=0; expires=Thu, 01-Jan-70 00:00:01 GMT;path=/;';
-		delete message.cookie;
 		sendToConsole(message);
 		if (message.notify) {
 			showNotification(message);
