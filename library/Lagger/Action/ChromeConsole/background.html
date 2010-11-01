@@ -1,0 +1,89 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript">
+
+var notifies = [];
+var current = null;
+var timeout = null;
+
+chrome.extension.onRequest.addListener(
+
+	function(request, sender, sendResponse) {
+		if(request.showNotification) {
+			showNotification(request.showNotification);
+		}
+		else if(request.changeTimeout) {
+			if(request.changeTimeout.stop) {
+				stopTimeout();
+			}
+			else {
+				startTimeout();
+			}
+		}
+});
+
+
+function showNotification(message)  {
+	var query = '?';
+	for(var k in message) {
+		query = query + encodeURIComponent(k) + '=' + encodeURIComponent(message[k]) + '&';
+	}
+	var notifyPageURL = chrome.extension.getURL("notify.html") + query;
+	var notification = webkitNotifications.createHTMLNotification(notifyPageURL);
+	
+	notifies.push({notification: notification, message: message});
+	var i = notifies.length - 1;
+	notification.onclose = function() {
+		clearNotification(i);
+	};
+	notification.show();
+	
+	if(!current) {
+		handleNextNotification();
+	}
+}
+
+function clearNotification(i, close) {
+		if(i == current) {
+			stopTimeout();
+			current = null; 
+		}
+		if(close && notifies[i].notification) {
+			notifies[i].notification.cancel();
+		}
+		delete notifies[i];
+		handleNextNotification();
+}
+
+
+function handleNextNotification() {
+	if(current) {
+		return;
+	}
+	for(var i in notifies) {
+		if(notifies[i]) {
+			current = i;
+			startTimeout();
+			return;
+		}
+	}
+}
+
+function startTimeout() {
+	var i = current;
+	timeout = setTimeout(function () {
+		clearNotification(i, true);
+	}, notifies[i].message.notify * 1000);
+}
+
+function stopTimeout() {
+	if(timeout) {
+		clearTimeout(timeout);
+	}
+}
+
+</script>
+</head>
+<body></body>
+</html>

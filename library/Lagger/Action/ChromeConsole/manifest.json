@@ -1,0 +1,23 @@
+{
+	"name": "PHP Console",
+	"description": "Display PHP errors/debugs in Google Chrome console or Notification Popup",
+	"background_page": "background.html",
+	 
+	"content_scripts": [ {
+		"all_frames": true,
+		"js": [ "main.js" ],
+		"matches": [ "http://*/*", "https://*/*" ],
+		"run_at": "document_start"
+	 } ],
+	 
+	"icons": {
+		"128": "img/logo_128.png",
+		"48": "img/logo_48.png",
+		"32": "img/logo_32.png",
+		"24": "img/logo_24.png",
+		"16": "img/logo_16.png"
+	 },
+	 
+	 "permissions": [ "tabs", "notifications", "http://*/", "https://*/" ],
+	 "version": "1.4.2"
+}

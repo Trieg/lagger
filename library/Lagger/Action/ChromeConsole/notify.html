@@ -1,0 +1,62 @@
+﻿<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" media="screen" href="notify.css" />
+<script type="text/javascript">
+
+function getUrlVars() {
+	var vars = {}, hash;
+	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+	for ( var i = 0; i < hashes.length; i++) {
+		hash = hashes[i].split('=');
+		vars[decodeURIComponent(hash[0])] = decodeURIComponent(hash[1]);
+	}
+	return vars;
+}
+
+function initMessage() {
+	var message = getUrlVars();
+	
+	document.getElementById('notifyType').className = 'hbox ' + message.type;
+	document.getElementById('notifySubject').innerHTML = message.subject;
+	document.getElementById('notifyMessage').innerHTML = message.text;
+	if(message.source) {
+		document.getElementById('notifySourceBox').style.display = 'block';
+		document.getElementById('notifySource').innerHTML = message.source;
+	}
+}
+
+function keepVisible() {
+	chrome.extension.sendRequest({changeTimeout : {stop : true}});
+}
+
+function markToCancel() {
+	chrome.extension.sendRequest({changeTimeout : {stop : false}});
+}
+
+</script>
+</head>
+<body id="body" onload="initMessage();" onmouseover="keepVisible()" onmouseout="markToCancel()">
+<div >
+<div class="vbox">
+<div class="vbox">
+
+<div class="hbox" id="notifyType">
+<div class="hbox wide padded" id="notifySubject"></div>
+</div>
+
+<div class="hbox border-top title">
+<div class="hbox wide padded" id="notifyMessage"></div>
+</div>
+
+<div id="notifySourceBox" style="display:none">
+<div class="hbox">
+<div class="hbox wide border-top padded summary" id="notifySource"></div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</body>
+</html>
