@@ -3,66 +3,71 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <script type="text/javascript">
 
-var notifies = [];
-var current = null;
-var timeout = null;
+notifies = [];
+current = null;
+timeout = null;
+firstDelay = 3000;
+limit = 50;
 
-chrome.extension.onRequest.addListener(
-
-	function(request, sender, sendResponse) {
-		if(request.showNotification) {
-			showNotification(request.showNotification);
+chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+	if (request.showNotifications) {
+		showNotifications(request.showNotifications);
+	}
+	else if (request.changeTimeout) {
+		if (request.changeTimeout.stop) {
+			stopTimeout();
 		}
-		else if(request.changeTimeout) {
-			if(request.changeTimeout.stop) {
-				stopTimeout();
-			}
-			else {
-				startTimeout();
-			}
+		else {
+			startTimeout();
 		}
+	}
 });
 
-
-function showNotification(message)  {
+function showNotification(message) {
 	var query = '?';
-	for(var k in message) {
+	for ( var k in message) {
 		query = query + encodeURIComponent(k) + '=' + encodeURIComponent(message[k]) + '&';
 	}
-	var notifyPageURL = chrome.extension.getURL("notify.html") + query;
+	var notifyPageURL = chrome.extension.getURL('notify.html') + query;
 	var notification = webkitNotifications.createHTMLNotification(notifyPageURL);
-	
-	notifies.push({notification: notification, message: message});
+
+	notifies.push({
+		notification : notification,
+		message : message
+	});
 	var i = notifies.length - 1;
-	notification.onclose = function() {
-		clearNotification(i);
+	notification.onclose = function(a) {
+		if (timeout) {
+			for ( var k in notifies) {
+				clearNotification(k);
+			}
+		}
+		else {
+			handleNextNotification();
+		}
 	};
-	notification.show();
-	
-	if(!current) {
-		handleNextNotification();
-	}
+	return notification;
 }
 
-function clearNotification(i, close) {
-		if(i == current) {
-			stopTimeout();
-			current = null; 
-		}
-		if(close && notifies[i].notification) {
+function clearNotification(i) {
+	if (i == current) {
+		stopTimeout();
+		current = null;
+	}
+	if (notifies[i]) {
+		if (notifies[i].notification) {
 			notifies[i].notification.cancel();
 		}
 		delete notifies[i];
-		handleNextNotification();
+	}
 }
 
-
 function handleNextNotification() {
-	if(current) {
+	if (current) {
 		return;
 	}
-	for(var i in notifies) {
-		if(notifies[i]) {
+	for ( var i in notifies) {
+		if (notifies[i]) {
 			current = i;
 			startTimeout();
 			return;
@@ -72,15 +77,36 @@ function handleNextNotification() {
 
 function startTimeout() {
 	var i = current;
-	timeout = setTimeout(function () {
-		clearNotification(i, true);
-	}, notifies[i].message.notify * 1000);
+	if(notifies[i]) {
+		timeout = setTimeout(function() {
+			stopTimeout();
+			clearNotification(i);
+		}, notifies[i].message.notify * 1000);
+	}
 }
 
 function stopTimeout() {
-	if(timeout) {
+	if (timeout) {
 		clearTimeout(timeout);
+		timeout = null;
 	}
+}
+
+function showNotifications(messages) {
+	var notifications = [];
+	for ( var i in messages) {
+		notifications.push(showNotification(messages[i]));
+		if(notifications.length > limit) {
+			break;
+		}
+	}
+	for ( var i in notifications) {
+		notifications[i].show();
+	}
+	stopTimeout();
+	setTimeout(function() {
+		handleNextNotification();
+	},  3000);
 }
 
 </script>
