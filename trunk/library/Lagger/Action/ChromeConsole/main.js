@@ -52,12 +52,16 @@ function getMessagesFromCookies() {
 		_order.push(m[2]);
 	}
 	_order.sort();
+	var _messagesToShow = [];
 	for ( var i in _order) {
 		var message = _messages[_order[i]];
 		sendToConsole(message);
 		if (message.notify) {
-			showNotification(message);
+			_messagesToShow.push(message);
 		}
+	}
+	if(_messagesToShow.length) {
+		showNotifications(_messagesToShow);
 	}
 }
 
@@ -71,8 +75,8 @@ function sendToConsole(message) {
 	}
 }
 
-function showNotification(message) {
+function showNotifications(messages) {
 	chrome.extension.sendRequest( {
-		showNotification : message
+		showNotifications : messages
 	});
 }
