@@ -26,6 +26,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 	
 	protected $type;
 	protected $showNotifyWithTimeLimit;
+	protected static $isEnabledOnClient;
 	protected static $index = 0;
 
 	/**
@@ -35,14 +36,21 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 	public function __construct($type, $showNotifyWithTimeLimit = false) {
 		$this->type = $type;
 		$this->showNotifyWithTimeLimit = $showNotifyWithTimeLimit === true ? self::defaultNotifyTimelimit : $showNotifyWithTimeLimit;
-		$this->setEnabledOnServer();
+		
+		if(self::$isEnabledOnClient === null) {
+			$this->setEnabledOnServer();
+			self::$isEnabledOnClient = $this->isEnabledOnClient();
+			if(self::$isEnabledOnClient) {
+				ob_start();
+			}
+		}
 	}
 
 	protected function make() {
 		if(headers_sent(&$file, &$line)) {
 			throw new Exception('setcookie failed because haders are sent (' . $file . ':' . $line . '). Try to use ob_start() to prevent this');
 		}
-		if(!$this->isEnabledOnClient()) {
+		if(!self::$isEnabledOnClient) {
 			return;
 		}
 		$data['type'] = $this->type;
