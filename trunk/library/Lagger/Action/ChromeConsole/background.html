@@ -8,6 +8,7 @@ current = null;
 timeout = null;
 firstDelay = 3000;
 limit = 50;
+lockTimeout = false;
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 	if (request.showNotifications) {
@@ -15,9 +16,11 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 	}
 	else if (request.changeTimeout) {
 		if (request.changeTimeout.stop) {
+			lockTimeout = true;
 			stopTimeout();
 		}
 		else {
+			lockTimeout = false;
 			startTimeout();
 		}
 	}
@@ -62,24 +65,32 @@ function clearNotification(i) {
 	}
 }
 
-function handleNextNotification() {
+function handleNextNotification(noTimeout) {
 	if (current) {
 		return;
 	}
 	for ( var i in notifies) {
 		if (notifies[i]) {
 			current = i;
-			startTimeout();
+			if(!noTimeout) {
+				startTimeout();
+			}
 			return;
 		}
 	}
 }
 
 function startTimeout() {
+	if(lockTimeout) {
+		return;
+	}
 	var i = current;
 	if(notifies[i]) {
 		timeout = setTimeout(function() {
 			stopTimeout();
+			if(lockTimeout) {
+				return;
+			}
 			clearNotification(i);
 		}, notifies[i].message.notify * 1000);
 	}
