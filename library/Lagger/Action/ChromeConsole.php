@@ -7,13 +7,8 @@
  * 
  * @desc Sending messages to Google Chrome console
  
- 	INSTALLATION:
- 	 
-	 	1. Open Google Chrome Extensions local page chrome://extensions/
-	 	2. Click "Developer mode"
-	 	3. Click "Load unpacked extension"
-	 	4. Set path to /Lagger/Action/ChromeConsole directory
-	 	5. Check if "PHP Console" extension is loaded
+ 	You need to install Google Chrome extension:
+ 	https://chrome.google.com/extensions/detail/nfhmhhlpfleoednkpnnnkolmclajemef
  	  
  */
 
