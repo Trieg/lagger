@@ -1,6 +1,6 @@
 {
 	"name": "PHP Console",
-	"description": "Display PHP errors/debugs in Google Chrome console or Notification Popup",
+	"description": "Display PHP errors/debugs in Google Chrome console or notification PopUp",
 	"background_page": "background.html",
 	 
 	"content_scripts": [ {
@@ -19,5 +19,5 @@
 	 },
 	 
 	 "permissions": [ "tabs", "notifications", "http://*/", "https://*/" ],
-	 "version": "1.4.2"
+	 "version": "1.4.3"
 }
