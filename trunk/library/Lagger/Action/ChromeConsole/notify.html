@@ -4,6 +4,16 @@
 <link rel="stylesheet" type="text/css" media="screen" href="notify.css" />
 <script type="text/javascript">
 
+isFocused = false;
+window.onfocus = function() {
+	isFocused = true;
+	keepVisible();
+};
+window.onblur = function() {
+	isFocused = false;
+	markToCancel();
+};
+
 function getUrlVars() {
 	var vars = {}, hash;
 	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
@@ -31,13 +41,16 @@ function keepVisible() {
 }
 
 function markToCancel() {
-	chrome.extension.sendRequest({changeTimeout : {stop : false}});
+	if(!isFocused) {
+		chrome.extension.sendRequest({changeTimeout : {stop : false}});
+	}
 }
 
 </script>
 </head>
 <body id="body" onload="initMessage();" onmouseover="keepVisible()" onmouseout="markToCancel()">
-<div >
+
+<div>
 <div class="vbox">
 <div class="vbox">
 
