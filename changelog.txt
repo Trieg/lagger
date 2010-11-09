@@ -1,3 +1,16 @@
+Release 1.4.2
+
+* Added: Lagger_Action_ChromeConsole - send messages to Google Chrome console
+* Added: Lagger_Handler_Errors ignore errors marked with @
+* Added: Lagger_Handler_Exceptions now has "trace" var in eventspace
+* Added: Lagger_Action_Print::flushToHtmlBody()
+* Fixed: Lagger_Action_Print flushing buffer on exit
+* Fixed: Lagger_Tagger session starting
+* Fixed: Lagger_ExpireList directory check
+* Fixed: Lagger_Handler internal exceptions throwing
+* Fixed: Lagger_ExpireList saving when script is break by fatal error
+* Fixed: Lagger_Eventspace now correctly fetch values of callback vars
+
 Release 1.4
 
 * Added: Lagger_Action_WinSpeak
