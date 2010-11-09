@@ -61,18 +61,13 @@ if(DEBUG_STDOUT) {
 	$debugTagger = new Lagger_Tagger('__debug');
 	
 	$debug->addAction(new Lagger_Action_Print(DEBUG_STDOUT_TEMPLATE), DEBUG_STDOUT_TAGS, $debugTagger);
-	// check Lagger/Action/Cookie.php about how you can use it
-	$debug->addAction(new Lagger_Action_Cookie('{type}: {message}', 'debug'), DEBUG_STDOUT_TAGS, $debugTagger);
+	// check Lagger/Action/ChromeConsole.php about how you can use it
+	$debug->addAction(new Lagger_Action_ChromeConsole('debug'), DEBUG_STDOUT_TAGS, $debugTagger);
 	// check Lagger/Action/FirePHP.php about how you can use it
 	$debug->addAction(new Lagger_Action_FirePhp('{message}', '{tags}', FirePHP::INFO), DEBUG_STDOUT_TAGS, $debugTagger);
 }
 if(DEBUG_LOGING) {
 	$debug->addAction(new Lagger_Action_FileLog(DEBUG_LOGING_TEMPLATE, DEBUG_LOGING_FILEPATH, DEBUG_LOGING_LIMIT_SIZE, DEBUG_LOGING_LIMIT_DAYS), DEBUG_LOGING_TAGS);
-}
-
-// Just for fun in windows servers it will speak the text :)
-if(stristr(PHP_OS, 'win') !== false) {
-	$debug->addAction(new Lagger_Action_WinSpeak('{message}', 50), 'speak');
 }
 
 /**************************************************************
@@ -87,10 +82,10 @@ if(ERRORS_STDOUT) {
 	$errors->addAction($printAction, ERRORS_STDOUT_TAGS);
 	$exceptions->addAction($printAction, ERRORS_STDOUT_TAGS);
 	
-	// check Lagger/Action/Cookie.php about how you can use it
-	$errorsCoockieAction = new Lagger_Action_Cookie('{type}: {message} {file}:{line}', 'error');
-	$errors->addAction($errorsCoockieAction, ERRORS_STDOUT_TAGS);
-	$exceptions->addAction($errorsCoockieAction, ERRORS_STDOUT_TAGS);
+	// check Lagger/Action/ChromeConsole.php about how you can use it
+	$errorsChromeAction = new Lagger_Action_ChromeConsole('error', 1);
+	$errors->addAction($errorsChromeAction, ERRORS_STDOUT_TAGS);
+	$exceptions->addAction($errorsChromeAction, ERRORS_STDOUT_TAGS);
 	
 	// check Lagger/Action/FirePHP.php about how you can use it
 	$errorsFirePhpAction = new Lagger_Action_FirePhp('{message} {file}:{line}', '{type}', FirePHP::ERROR);

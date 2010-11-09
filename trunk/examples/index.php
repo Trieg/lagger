@@ -1,8 +1,5 @@
 <?php
 
-ob_start();
-
-
 require_once ('config.php');
 require_once ('lagger_init.php');
 
