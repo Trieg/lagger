@@ -46,10 +46,13 @@ function getMessagesFromCookies() {
 	var regexp = new RegExp(';\\s*(phpcsl_(.*?))=([^;]+)', 'g');
 	var _messages = [];
 	var _order = [];
-	while ((m = regexp.exec(';' + document.cookie + ';')) != null) {
-		eval('_messages[m[2]] = ' + decodeURIComponent(m[3]).replace(/\+/g, ' '));
-		document.cookie = m[1] + '=0; expires=Thu, 01-Jan-70 00:00:01 GMT;path=/;';
-		_order.push(m[2]);
+	for(var i=10; i; i--) {
+		while ((m = regexp.exec(';' + document.cookie + ';')) != null) {
+			var k = parseInt(m[2]);
+			eval('_messages[k] = ' + decodeURIComponent(m[3]).replace(/\+/g, ' '));
+			document.cookie = m[1] + '=0; expires=Thu, 01-Jan-70 00:00:01 GMT;path=/;';
+			_order.push(k);
+		}
 	}
 	_order.sort();
 	var _messagesToShow = [];
