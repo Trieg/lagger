@@ -5,6 +5,7 @@
 <script type="text/javascript">
 
 isFocused = false;
+isMouseOver = false;
 window.onfocus = function() {
 	isFocused = true;
 	keepVisible();
@@ -37,14 +38,22 @@ function initMessage() {
 }
 
 function keepVisible() {
+	isMouseOver = true;
 	chrome.extension.sendRequest({changeTimeout : {stop : true}});
 }
 
 function markToCancel() {
+	isMouseOver = false;
 	if(!isFocused) {
 		chrome.extension.sendRequest({changeTimeout : {stop : false}});
+		setTimeout(function() {
+			if(isMouseOver || isFocused) {
+				keepVisible();
+			}
+		}, 1000);
 	}
 }
+
 
 </script>
 </head>
