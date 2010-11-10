@@ -14,15 +14,25 @@
 
 class Lagger_Action_ChromeConsole extends Lagger_Action {
 	
-	const cookieName = 'phpcsl';
-	const cookieLifetime = 1800;
+	const version = 2;
+	const messagesCookiePrefix = 'phpcsl_';
+	const serverVersionCookie = 'phpcsls';
+	const clientVersionCookie = 'phpcslc';
+	const cookiesLimit = 50;
+	const defaultNotifyTimelimit = 1;
+	const bufferSizeLimit = 4000;
 	const messageLengthLimit = 300;
-	const defaultNotifyTimelimit = 2;
+	
+	protected static $isEnabledOnClient;
+	protected static $isDisabled;
+	protected static $messagesBuffer = array();
+	protected static $bufferLength = 0;
+	protected static $messagesSent = 0;
+	protected static $cookiesSent = 0;
+	protected static $index = 0;
 	
 	protected $type;
 	protected $showNotifyWithTimeLimit;
-	protected static $isEnabledOnClient;
-	protected static $index = 0;
 
 	/**
 	 * @param string template
@@ -41,11 +51,21 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 		}
 	}
 
+	protected function isEnabledOnClient() {
+		return isset($_COOKIE[self::clientVersionCookie]) && $_COOKIE[self::clientVersionCookie] == self::version;
+	}
+
+	protected function setEnabledOnServer() {
+		if(!isset($_COOKIE[self::serverVersionCookie]) || $_COOKIE[self::serverVersionCookie] != self::version) {
+			setcookie(self::serverVersionCookie, self::version, null, '/');
+		}
+	}
+
 	protected function make() {
 		if(headers_sent(&$file, &$line)) {
-			throw new Exception('setcookie failed because haders are sent (' . $file . ':' . $line . '). Try to use ob_start() to prevent this');
+			throw new Exception('setcookie failed because haders are sent (' . $file . ':' . $line . ')');
 		}
-		if(!self::$isEnabledOnClient) {
+		if(!self::$isEnabledOnClient || self::$isDisabled) {
 			return;
 		}
 		$data['type'] = $this->type;
@@ -59,20 +79,42 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 		if($this->showNotifyWithTimeLimit) {
 			$data['notify'] = (int) $this->showNotifyWithTimeLimit;
 		}
-		setcookie(self::cookieName . '_' . $this->getEventIndex(), json_encode($data), time() + self::cookieLifetime, '/');
+		$this->pushMessageToBuffer($data);
 	}
 
-	protected function isEnabledOnClient() {
-		return isset($_COOKIE[self::cookieName . 'c']);
+	protected function pushMessageToBuffer($message) {
+		$encodedMessageLength = strlen(rawurlencode(json_encode($message)));
+		if(self::$bufferLength + $encodedMessageLength > self::bufferSizeLimit) {
+			$this->flushMessagesBuffer();
+		}
+		self::$messagesBuffer[] = $message;
+		self::$bufferLength += $encodedMessageLength;
 	}
 
-	protected function setEnabledOnServer() {
-		if(!isset($_COOKIE[self::cookieName . 's'])) {
-			setcookie(self::cookieName . 's', '1', null, '/');
+	protected static function getNextIndex() {
+		return substr(number_format(microtime(1), 3, '', ''), -6) + self::$index ++;
+	}
+
+	protected function flushMessagesBuffer() {
+		if(self::$messagesBuffer) {
+			$this->sendMessages(self::$messagesBuffer);
+			self::$bufferLength = 0;
+			self::$messagesSent += count(self::$messagesBuffer);
+			self::$messagesBuffer = array();
+			self::$cookiesSent ++;
+			if(self::$cookiesSent == self::cookiesLimit) {
+				self::$isDisabled = true;
+				$message = array('type' => 'error', 'subject' => 'PHP CONSOLE', 'text' => 'MESSAGES LIMIT EXCEEDED BECAUSE OF COOKIES STORAGE LIMIT. TOTAL MESSAGES SENT: ' . self::$messagesSent, 'source' => __FILE__, 'notify' => 3);
+				$this->sendMessages(array($message));
+			}
 		}
 	}
 
-	protected function getEventIndex() {
-		return substr(number_format(microtime(1), 3, '', ''), -6) + self::$index ++;
+	protected function sendMessages($messages) {
+		setcookie(self::messagesCookiePrefix . self::getNextIndex(), json_encode($messages), null, '/');
+	}
+
+	public function __destruct() {
+		$this->flushMessagesBuffer();
 	}
 }

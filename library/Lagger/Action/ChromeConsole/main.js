@@ -1,3 +1,5 @@
+var CLIENT_VERSION = 2;
+
 if (isEnabledOnServer()) {
 	if(!isEnabledOnClient()) {
 		setEnabledOnClient();
@@ -13,30 +15,28 @@ if (isEnabledOnServer()) {
 }
 
 function isEnabledOnServer() {
-	return new RegExp(';\\s*phpcsls=1;').exec(';' + document.cookie + ';') || false;
+	var m = new RegExp(';\\s*phpcsls=(.*?);', 'g').exec(';' + document.cookie + ';');
+	if(m) {
+		var SERVER_VERSION = m[1];
+		if (SERVER_VERSION == CLIENT_VERSION) {
+			return true;
+		}
+		else if(SERVER_VERSION < CLIENT_VERSION) {
+			alert('PHP Console FAILED: You\'re using old version of Lagger. Please update it from http://code.google.com/p/lagger');
+		}
+		else if(SERVER_VERSION > CLIENT_VERSION) {
+			alert('PHP Console FAILED: You\'re using old version of "PHP Console" extension. Please update it');
+		}
+	}
 }
 
 function isEnabledOnClient() {
-	return new RegExp(';\\s*phpcslc=1;').exec(';' + document.cookie + ';') || false;
+	return new RegExp(';\\s*phpcslc=' + CLIENT_VERSION + ';').exec(';' + document.cookie + ';') || false;
 }
 
 function setEnabledOnClient() {
-	document.cookie = 'phpcslc=1; path=/;';
+	document.cookie = 'phpcslc=' + CLIENT_VERSION + '; path=/;';
 	window.location = document.location;
-}
-
-function isEnabled() {
-	return new RegExp(';\\s*phpcsl=1;').exec(';' + document.cookie + ';') || false;
-}
-
-function getCookieVars(cookie) {
-	var vars = {}, hash;
-	var hashes = cookie.slice(cookie.indexOf('?') + 1).split('&');
-	for ( var i = 0; i < hashes.length; i++) {
-		hash = hashes[i].split('=');
-		vars[decodeURIComponent(hash[0])] = decodeURIComponent(hash[1]);
-	}
-	return vars;
 }
 
 function getMessagesFromCookies() {
@@ -57,10 +57,13 @@ function getMessagesFromCookies() {
 	_order.sort();
 	var _messagesToShow = [];
 	for ( var i in _order) {
-		var message = _messages[_order[i]];
-		sendToConsole(message);
-		if (message.notify) {
-			_messagesToShow.push(message);
+		var _m = _messages[_order[i]];
+		for ( var k in _m) {
+			var message = _m[k];
+			sendToConsole(message);
+			if (message.notify) {
+				_messagesToShow.push(message);
+			}
 		}
 	}
 	if(_messagesToShow.length) {
