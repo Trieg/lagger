@@ -47,6 +47,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 			self::$isEnabledOnClient = $this->isEnabledOnClient();
 			if(self::$isEnabledOnClient) {
 				ob_start();
+				register_shutdown_function(array($this, 'flushMessagesBuffer'));
 			}
 		}
 	}
@@ -57,14 +58,11 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 
 	protected function setEnabledOnServer() {
 		if(!isset($_COOKIE[self::serverVersionCookie]) || $_COOKIE[self::serverVersionCookie] != self::version) {
-			setcookie(self::serverVersionCookie, self::version, null, '/');
+			$this->setCookie(self::serverVersionCookie, self::version);
 		}
 	}
 
 	protected function make() {
-		if(headers_sent(&$file, &$line)) {
-			throw new Exception('setcookie failed because haders are sent (' . $file . ':' . $line . ')');
-		}
 		if(!self::$isEnabledOnClient || self::$isDisabled) {
 			return;
 		}
@@ -80,6 +78,9 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 			$data['notify'] = (int) $this->showNotifyWithTimeLimit;
 		}
 		$this->pushMessageToBuffer($data);
+		if($this->eventspace->getVarValue('tags') == 'fatal') {
+			$this->flushMessagesBuffer();
+		}
 	}
 
 	protected function pushMessageToBuffer($message) {
@@ -95,7 +96,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 		return substr(number_format(microtime(1), 3, '', ''), -6) + self::$index ++;
 	}
 
-	protected function flushMessagesBuffer() {
+	public function flushMessagesBuffer() {
 		if(self::$messagesBuffer) {
 			$this->sendMessages(self::$messagesBuffer);
 			self::$bufferLength = 0;
@@ -109,12 +110,15 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 			}
 		}
 	}
-
-	protected function sendMessages($messages) {
-		setcookie(self::messagesCookiePrefix . self::getNextIndex(), json_encode($messages), null, '/');
+	
+	public function setCookie($name, $value) {
+		if(headers_sent($file, $line)) {
+			throw new Exception('setcookie() failed because haders are sent (' . $file . ':' . $line . '). Try to use ob_start()');
+		}
+		setcookie($name, $value, null, '/');
 	}
 
-	public function __destruct() {
-		$this->flushMessagesBuffer();
+	protected function sendMessages($messages) {
+		$this->setCookie(self::messagesCookiePrefix . self::getNextIndex(), json_encode($messages));
 	}
 }

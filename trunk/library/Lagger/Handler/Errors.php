@@ -8,8 +8,8 @@
  */
 class Lagger_Handler_Errors extends Lagger_Handler {
 	
-	protected static $codesTags = array(E_ERROR => 'fatal', E_WARNING => 'warning', E_PARSE => 'fatal', E_NOTICE => 'notice', E_CORE_ERROR => 'fatal', E_CORE_WARNING => 'warning', E_COMPILE_ERROR => 'fatal', E_COMPILE_WARNING => 'warning', E_USER_ERROR => 'fatal', E_USER_WARNING => 'warning', E_USER_NOTICE => 'notice', E_STRICT => 'warning', E_DEPRECATED => 'warning');
-	protected static $codesNames = array(E_ERROR => 'E_ERROR', E_WARNING => 'E_WARNING', E_PARSE => 'E_PARSE', E_NOTICE => 'E_NOTICE', E_CORE_ERROR => 'E_CORE_ERROR', E_CORE_WARNING => 'E_CORE_WARNING', E_COMPILE_ERROR => 'E_COMPILE_ERROR', E_COMPILE_WARNING => 'E_COMPILE_WARNING', E_USER_ERROR => 'E_USER_ERROR', E_USER_WARNING => 'E_USER_WARNING', E_USER_NOTICE => 'E_USER_NOTICE', E_STRICT => 'E_STRICT', E_DEPRECATED => 'E_DEPRECATED');
+	protected static $codesTags = array(E_ERROR => 'fatal', E_WARNING => 'warning', E_PARSE => 'fatal', E_NOTICE => 'notice', E_CORE_ERROR => 'fatal', E_CORE_WARNING => 'warning', E_COMPILE_ERROR => 'fatal', E_COMPILE_WARNING => 'warning', E_USER_ERROR => 'fatal', E_USER_WARNING => 'warning', E_USER_NOTICE => 'notice', E_STRICT => 'warning');
+	protected static $codesNames = array(E_ERROR => 'E_ERROR', E_WARNING => 'E_WARNING', E_PARSE => 'E_PARSE', E_NOTICE => 'E_NOTICE', E_CORE_ERROR => 'E_CORE_ERROR', E_CORE_WARNING => 'E_CORE_WARNING', E_COMPILE_ERROR => 'E_COMPILE_ERROR', E_COMPILE_WARNING => 'E_COMPILE_WARNING', E_USER_ERROR => 'E_USER_ERROR', E_USER_WARNING => 'E_USER_WARNING', E_USER_NOTICE => 'E_USER_NOTICE', E_STRICT => 'E_STRICT');
 	
 	protected $iniSets = array('display_errors' => false, 'html_errors' => false, 'ignore_repeated_errors' => false, 'ignore_repeated_source' => false);
 	protected $oldErrorHandler;
@@ -20,6 +20,10 @@ class Lagger_Handler_Errors extends Lagger_Handler {
 		$this->iniSets['html_errors'] = $htmlErrors;
 		$this->iniSets['ignore_repeated_errors'] = $ignoreRepeatedErrors;
 		$this->iniSets['ignore_repeated_source'] = $ignoreRepeatedSource;
+		if(defined('E_DEPRECATED')) {
+			self::$codesTags[E_DEPRECATED] = 'warning';
+			self::$codesNames[E_DEPRECATED] = 'E_DEPRECATED';
+		}
 		parent::__construct($eventspace);
 	}
 
