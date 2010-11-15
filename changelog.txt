@@ -1,3 +1,8 @@
+Release 1.4.5
+
+* Fixed: Compatibility with PHP 5.2.x
+* Fixed: Fatal errors handling in Lagger_Action_ChromeConsole in PHP 5.2.x
+
 Release 1.4.2
 
 * Added: Lagger_Action_ChromeConsole - send messages to Google Chrome console
