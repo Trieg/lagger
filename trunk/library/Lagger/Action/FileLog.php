@@ -6,7 +6,7 @@
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
  * 
  */
-class Lagger_Action_FileLog extends Lagger_Action{
+class Lagger_Action_FileLog extends Lagger_Action {
 	
 	protected $filepath;
 	protected $template;
@@ -21,24 +21,24 @@ class Lagger_Action_FileLog extends Lagger_Action{
 		}
 		$this->filepath = realpath($filepath); // required for fopen works on script shutdown
 		$this->template = $template;
-		$this->sizeLimit = (int)$sizeLimit;
-		$this->daysLimit = (int)$daysLimit;
+		$this->sizeLimit = (int) $sizeLimit;
+		$this->daysLimit = (int) $daysLimit;
 	}
 
 	protected function make() {
 		$this->checkLimits();
 		
 		$fp = fopen($this->filepath, 'a'); // TODO: lock check/set
-		fputs($fp, $this->eventspace->fetch($this->template));
+		fputs($fp, $this->eventspace->fetch($this->template) . "\n");
 		fclose($fp);
 	}
 
 	protected function checkLimits() {
-		if (!mt_rand(0, self::checkLimit)) {
-			if ($this->sizeLimit || $this->daysLimit) {
+		if(!mt_rand(0, self::checkLimit)) {
+			if($this->sizeLimit || $this->daysLimit) {
 				$fp = fopen($this->filepath, 'r');
 				$fstat = fstat($fp);
-				if ($this->daysLimit && (time() - $fstat['mtime']) > ($this->daysLimit * 24 * 60 * 60)) {
+				if($this->daysLimit && (time() - $fstat['mtime']) > ($this->daysLimit * 24 * 60 * 60)) {
 					unlink($this->filepath); // TODO: lock check/set, no unlink - just cut to 1/2 ?
 				}
 				fclose($fp);
