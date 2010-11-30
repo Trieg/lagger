@@ -14,10 +14,10 @@ class Lagger_ExpireList {
 	const checkAllExpires = 100;
 
 	public function __construct($storageDir, $entryPostfix = '.expire') {
-		if (!is_dir($storageDir) && !@mkdir($storageDir, 0755, true)) {
+		if(!is_dir($storageDir) && !@mkdir($storageDir, 0755, true)) {
 			throw new Exception('Directory "' . $storageDir . '" not found and cannot be created');
 		}
-		if (!mt_rand(0, self::checkAllExpires)) {
+		if(!mt_rand(0, self::checkAllExpires)) {
 			$this->checkAllExpired();
 		}
 		
@@ -27,8 +27,8 @@ class Lagger_ExpireList {
 
 	public function isExpired($key, $entryPrefix = null) {
 		$filepath = $this->getEntryFilepath($key, $entryPrefix);
-		if (is_file($filepath)) {
-			if (file_get_contents($filepath) > time()) {
+		if(is_file($filepath)) {
+			if(file_get_contents($filepath) > time()) {
 				return false;
 			}
 			else {
@@ -48,9 +48,10 @@ class Lagger_ExpireList {
 
 	protected function getAllEntries() {
 		$entries = array();
-		if ($handle = opendir($this->storageDir)) {
-			while (false !== ($file = readdir($handle))) {
-				if (substr($file, -1 * strlen($this->entryPostfix)) == $this->entryPostfix) {
+		$handle = opendir($this->storageDir);
+		if($handle) {
+			while(false !== ($file = readdir($handle))) {
+				if(substr($file, -1 * strlen($this->entryPostfix)) == $this->entryPostfix) {
 					$entries[] = $this->storageDir . $file;
 				}
 			}
@@ -60,15 +61,15 @@ class Lagger_ExpireList {
 	}
 
 	public function checkAllExpired() {
-		foreach ($this->getAllEntries() as $file) {
-			if (file_get_contents($file) <= time()) {
+		foreach($this->getAllEntries() as $file) {
+			if(file_get_contents($file) <= time()) {
 				unlink($file);
 			}
 		}
 	}
 
 	public function clearAll() {
-		foreach ($this->getAllEntries() as $file) {
+		foreach($this->getAllEntries() as $file) {
 			unlink($file);
 		}
 	}

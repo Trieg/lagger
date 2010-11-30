@@ -1,20 +1,20 @@
 <?php
 
 /**
- * 
+ *
  * @see http://code.google.com/p/lagger
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
- * 
+ *
  */
 abstract class Lagger_Handler {
-	
+
 	protected $eventspace;
 	protected $actions = array();
 	protected $currentAction;
 	protected $handling;
 	public static $skipNexInternalException;
 	protected static $internalErrorsActions = array();
-	
+
 	const tagSeparator = ',';
 
 	public function __construct(Lagger_Eventspace $eventspace) {
@@ -30,34 +30,54 @@ abstract class Lagger_Handler {
 	}
 
 	public function addAction(Lagger_Action $action, $tags = null, Lagger_Tagger $tagger = null) {
-		if ($tagger && $tagger->tagsRewrited()) {
+		if($tagger && $tagger->tagsRewrited()) {
 			$tags = $tagger->getNewTags();
 		}
-		if ($tags === '') {
+		if($tags === '') {
 			$tags = null;
 		}
-		if ($tags || $tags === null) {
-			$this->actions[] = array('objects' => $action, 'tags' => $tags ? array_map('trim', explode(self::tagSeparator, $tags)) : array());
+		if($tags || $tags === null) {
+			$incTags = null;
+			$excTags = null;
+			self::parseActionTagsString($tags, $incTags, $excTags);
+			$this->actions[] = array('object' => $action, 'included_tags' => $incTags, 'excluded_tags' => $excTags);
 		}
 		return $this;
 	}
 
+	protected static function parseActionTagsString($tagsString, &$incTags, &$excTags = array()) {
+		if(preg_match_all('/(-(\w+))|(\w+)/', $tagsString, $matches)) {
+			foreach($matches[3] as $i => $incTag) {
+				if($incTag === '') {
+					$excTags[] = $matches[2][$i];
+				}
+				else {
+					$incTags[] = $incTag;
+				}
+			}
+		}
+	}
+
+	protected static function parseEventTagsString($tagsString) {
+		return array_map('trim', explode(self::tagSeparator, $tagsString));
+	}
+
 	protected function handleActions(array $eventVars, $eventTags = null) {
-		if (!$this->handling) { // TODO: require some handler for internal Lagger errors
+		if(!$this->handling) { // TODO: require some handler for internal Lagger errors
 			$this->handling = true;
 			$eventVars['tags'] = $eventTags;
-			if (!isset($eventVars['handler'])) {
+			if(!isset($eventVars['handler'])) {
 				$eventVars['handler'] = get_class($this);
 			}
 			$this->eventspace->resetVarsValues($eventVars);
 			$throwException = null;
-			foreach ($this->getActionsByTags($eventTags) as $action) {
+			foreach($this->getActionsByTags($eventTags) as $action) {
 				try {
-					$this->currentAction = $action['objects'];
-					$action['objects']->callMake($this->eventspace);
+					$this->currentAction = $action['object'];
+					$action['object']->callMake($this->eventspace);
 				}
-				catch (Exception $e) {
-					if (self::$skipNexInternalException) {
+				catch(Exception $e) {
+					if(self::$skipNexInternalException) {
 						self::$skipNexInternalException = false;
 						$throwException = $e;
 					}
@@ -73,25 +93,25 @@ abstract class Lagger_Handler {
 		}
 	}
 
-	protected function getActionsByTags($eventTags) {
+	protected function getActionsByTags($eventTagsString) {
 		$actions = array();
-		$eventTags = array_map('trim', explode(self::tagSeparator, $eventTags));
-		foreach ($this->actions as $action) {
-			if ($this->isTagsMatches($action['tags'], $eventTags)) {
+		$eventTags = self::parseEventTagsString($eventTagsString);
+		foreach($this->actions as $action) {
+			if($this->isTagsMatches($eventTags, $action['included_tags'], $action['excluded_tags'])) {
 				$actions[] = $action;
 			}
 		}
 		return $actions;
 	}
 
-	protected function isTagsMatches($actionTags, $eventTags) {
-		return !$actionTags || array_intersect($actionTags, $eventTags);
+	protected function isTagsMatches($eventTags, $incTags, $excTags) {
+		return (!$excTags || !array_intersect($eventTags, $excTags)) && (!$incTags || array_intersect($incTags, $eventTags));
 	}
 
 	/**************************************************************
 	 INTERNAL ERROR HANDLING
 	 **************************************************************/
-	
+
 	public static function addInternalErrorAction(Lagger_Action $action) {
 		self::$internalErrorsActions[] = $action;
 	}
@@ -100,13 +120,13 @@ abstract class Lagger_Handler {
 		$newEventspace = clone $eventspace;
 		$eventVars = array('message' => $message, 'type' => $type);
 		$newEventspace->resetVarsValues($eventVars);
-		foreach (self::$internalErrorsActions as $action) {
+		foreach(self::$internalErrorsActions as $action) {
 			$action->callMake($newEventspace);
 		}
 	}
 
 	public function __destruct() {
-		if ($this->handling) {
+		if($this->handling) {
 			self::handleInternalError($this->eventspace, 'LAGGER_INTERNAL_FATAL', 'Unkown internal FATAL error in handling "' . get_class($this->currentAction) . '"');
 		}
 	}

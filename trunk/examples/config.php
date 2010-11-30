@@ -3,6 +3,7 @@
 // USING CONSTANTS IS NOT REQUIRED!
 // CHECK lagger_init.php ABOUT HOW LAGGER IS CONFIGURED
 
+
 define('LOGS_DIR', 'logs');
 
 define('SKIPER_DIR', LOGS_DIR . DIRECTORY_SEPARATOR . 'skip');
@@ -46,16 +47,11 @@ define('DEBUG_LOGING_TEMPLATE', "{date} {time};{process_id|csv};{microtime|csv};
 
 // Autoload classes
 define('LIB_DIR', '../library/');
-
 function autoloadByDir($class) {
-	foreach (array(LIB_DIR, './') as $dir) {
-		$filePath = $dir . str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
-		if (is_file($filePath)) {
-			return require_once ($filePath);
-		}
-	}
+	$filePath = LIB_DIR . str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
+	require_once ($filePath);
 }
 spl_autoload_register('autoloadByDir');
 
 // Set it to prevent Time zone PHP Warning when calling date() function
-date_default_timezone_set('Europe/Moscow'); 
+date_default_timezone_set('Europe/Moscow');
