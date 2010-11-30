@@ -17,6 +17,7 @@ toDebug('Oops, lagger did it again :)', 'speak'); // will be not printed, but yo
 echo '<br /><b>You can override tags for debug output by __debug parameter in GET:</b><br />
 <a href="?__debug=">Show all</a><br />
 <a href="?__debug=high,test,database">Show only tags "high,test,database"</a><br />
+<a href="?__debug=high,-database">Show "high" tags and exclude "database" tags</a><br />
 <a href="?__reset">Reset to config settings</a><br />'; 
 
 // Debug by tag 'sql'. Check output in '\examples\logs\debug_sql_log.csv', open with Microsoft Excel or Open office 
