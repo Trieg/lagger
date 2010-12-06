@@ -16,6 +16,9 @@ define('LAGGER_PHAR_FILEPATH', dirname(__FILE__) . '/Lagger.phar');
 if(!Phar::canWrite()) {
 	throw new Exception('Unable to create PHAR archive, must be phar.readonly=Off option in php.ini');
 }
+if(file_exists(LAGGER_PHAR_FILEPATH)) {
+	unlink(LAGGER_PHAR_FILEPATH);
+}
 
 $phar = new Phar(LAGGER_PHAR_FILEPATH);
 $phar = $phar->convertToExecutable(Phar::PHAR);
