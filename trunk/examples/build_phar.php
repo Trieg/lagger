@@ -11,7 +11,7 @@
 require_once ('config.php');
 
 define('LAGGER_DIR', LIB_DIR . 'Lagger');
-define('LAGGER_PHAR_FILEPATH', LIB_DIR . 'Lagger.phar');
+define('LAGGER_PHAR_FILEPATH', dirname(__FILE__) . '/Lagger.phar');
 
 if(!Phar::canWrite()) {
 	throw new Exception('Unable to create PHAR archive, must be phar.readonly=Off option in php.ini');
