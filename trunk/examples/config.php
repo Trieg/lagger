@@ -45,13 +45,10 @@ define('DEBUG_LOGING_LIMIT_SIZE', 500000);
 define('DEBUG_LOGING_LIMIT_DAYS', 7);
 define('DEBUG_LOGING_TEMPLATE', "{date} {time};{process_id|csv};{microtime|csv};{tags|csv};{message|trim|csv}\n");
 
-// Autoload classes
+// Autoload Lagger classes (check alternative way in /examples/build_phar.php)
 define('LIB_DIR', '../library/');
 function autoloadByDir($class) {
 	$filePath = LIB_DIR . str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
 	require_once ($filePath);
 }
 spl_autoload_register('autoloadByDir');
-
-// Set it to prevent Time zone PHP Warning when calling date() function
-date_default_timezone_set('Europe/Moscow');
