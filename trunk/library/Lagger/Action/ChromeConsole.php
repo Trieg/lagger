@@ -19,8 +19,8 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 	const serverVersionCookie = 'phpcsls';
 	const clientVersionCookie = 'phpcslc';
 	const cookiesLimit = 50;
+	const cookieSizeLimit = 4000;
 	const defaultNotifyTimelimit = 1;
-	const bufferSizeLimit = 4000;
 	const messageLengthLimit = 300;
 	
 	protected static $isEnabledOnClient;
@@ -85,7 +85,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 
 	protected function pushMessageToBuffer($message) {
 		$encodedMessageLength = strlen(rawurlencode(json_encode($message)));
-		if(self::$bufferLength + $encodedMessageLength > self::bufferSizeLimit) {
+		if(self::$bufferLength + $encodedMessageLength > self::cookieSizeLimit) {
 			$this->flushMessagesBuffer();
 		}
 		self::$messagesBuffer[] = $message;
