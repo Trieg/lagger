@@ -35,8 +35,8 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 	protected $showNotifyWithTimeLimit;
 
 	/**
-	 * @param string template
 	 * @param string type "error" or "debug"
+	 * @param integer show notifications with time limit (in seconds)
 	 */
 	public function __construct($type, $showNotifyWithTimeLimit = false) {
 		$this->type = $type;
