@@ -67,7 +67,7 @@ if(DEBUG_STDOUT) {
 	$debug->addAction(new Lagger_Action_FirePhp('{message}', '{tags}', FirePHP::INFO), DEBUG_STDOUT_TAGS, $debugTagger);
 }
 if(DEBUG_LOGING) {
-	$debug->addAction(new Lagger_Action_FileLog(DEBUG_LOGING_TEMPLATE, DEBUG_LOGING_FILEPATH, DEBUG_LOGING_LIMIT_SIZE, DEBUG_LOGING_LIMIT_DAYS), DEBUG_LOGING_TAGS);
+	$debug->addAction(new Lagger_Action_FileLog(DEBUG_LOGING_TEMPLATE, DEBUG_LOGING_FILEPATH, DEBUG_LOGING_LIMIT_SIZE), DEBUG_LOGING_TAGS);
 }
 
 /**************************************************************
@@ -97,7 +97,7 @@ $fatalPrintAction = new Lagger_Action_Print('<br /><font color="red">Our site is
 $errors->addAction($fatalPrintAction, 'fatal');
 
 if(ERRORS_LOGING) {
-	$logAction = new Lagger_Action_FileLog(ERRORS_LOGING_TEMPLATE, ERRORS_LOGING_FILEPATH, ERRORS_LOGING_LIMIT_SIZE, ERRORS_LOGING_LIMIT_DAYS);
+	$logAction = new Lagger_Action_FileLog(ERRORS_LOGING_TEMPLATE, ERRORS_LOGING_FILEPATH, ERRORS_LOGING_LIMIT_SIZE);
 	$errors->addAction($logAction, ERRORS_LOGING_TAGS);
 	$exceptions->addAction($logAction, ERRORS_LOGING_TAGS);
 }

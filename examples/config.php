@@ -18,7 +18,6 @@ define('ERRORS_LOGING', true);
 define('ERRORS_LOGING_TAGS', 'warning,fatal');
 define('ERRORS_LOGING_FILEPATH', LOGS_DIR . DIRECTORY_SEPARATOR . 'errors_log.htm');
 define('ERRORS_LOGING_LIMIT_SIZE', 500000);
-define('ERRORS_LOGING_LIMIT_DAYS', 180);
 define('ERRORS_LOGING_TEMPLATE', '{date} {time} <a href="http://{host}{uri}">http://{host}{uri}</a><br /><b>{type}</b>: {message|htmlentities}<br />{file} [{line}]<hr />');
 
 define('ERRORS_SMS', false); // TODO: check /library/SmsSender.php before enable it
@@ -42,7 +41,6 @@ define('DEBUG_LOGING', true);
 define('DEBUG_LOGING_TAGS', 'sql');
 define('DEBUG_LOGING_FILEPATH', LOGS_DIR . DIRECTORY_SEPARATOR . 'debug_sql_log.csv');
 define('DEBUG_LOGING_LIMIT_SIZE', 500000);
-define('DEBUG_LOGING_LIMIT_DAYS', 7);
 define('DEBUG_LOGING_TEMPLATE', "{date} {time};{process_id|csv};{microtime|csv};{tags|csv};{message|trim|csv}\n");
 
 // Autoload Lagger classes (check alternative way in /examples/build_phar.php)
