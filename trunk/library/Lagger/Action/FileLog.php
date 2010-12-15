@@ -8,34 +8,31 @@
  */
 class Lagger_Action_FileLog extends Lagger_Action {
 
-	protected $filepath;
 	protected $template;
+	protected $filepath;
+	protected $chmod;
 	protected $sizeLimit;
-	protected $daysLimit;
-	protected $onetimeMode;
 
 	const checkLimit = 100;
 
-	public function __construct($template, $filepath, $sizeLimit = null, $daysLimit = null, $onetimeMode = false) {
+	public function __construct($template, $filepath, $sizeLimit = null, $chmod = 0666) {
 		if(!file_exists($filepath)) {
-			file_put_contents($filepath, '');
+			$this->reinitLogFile($filepath, $chmod);
 		}
-		$this->filepath = realpath($filepath); // required for fopen works on script shutdown
-		$this->onetimeMode = $onetimeMode;
 		$this->template = $template;
+		$this->filepath = realpath($filepath); // realpath is required for fopen works on script shutdown
+		$this->chmod = $chmod;
 		$this->sizeLimit = (int) $sizeLimit;
-		$this->daysLimit = (int) $daysLimit;
+	}
+
+	protected function reinitLogFile($filepath, $chmod = null) {
+		file_put_contents($filepath, '');
+		if($chmod) {
+			chmod($filepath, $chmod);
+		}
 	}
 
 	protected function make() {
-		static $firstTime = true;
-		if($firstTime) {
-			if($this->onetimeMode) {
-				file_put_contents($this->filepath, '');
-			}
-			$firstTime = false;
-		}
-
 		$this->checkLimits();
 		$fp = fopen($this->filepath, 'a'); // TODO: lock check/set
 		fputs($fp, $this->eventspace->fetch($this->template) . "\n");
@@ -43,17 +40,8 @@ class Lagger_Action_FileLog extends Lagger_Action {
 	}
 
 	protected function checkLimits() {
-		if(!mt_rand(0, self::checkLimit)) {
-			if($this->sizeLimit || $this->daysLimit) {
-				if(file_exists($this->filepath)) {
-					$fp = fopen($this->filepath, 'r');
-					$fstat = fstat($fp);
-					fclose($fp);
-					if($this->daysLimit && (time() - $fstat['mtime']) > ($this->daysLimit * 24 * 60 * 60)) {
-						file_put_contents($this->filepath, '');
-					}
-				}
-			}
+		if($this->sizeLimit && !mt_rand(0, self::checkLimit) && filesize($this->filepath) > $this->sizeLimit) {
+			$this->reinitLogFile($this->filepath, $this->chmod);
 		}
 	}
 }
