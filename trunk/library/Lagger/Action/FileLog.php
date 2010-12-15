@@ -34,7 +34,7 @@ class Lagger_Action_FileLog extends Lagger_Action {
 
 	protected function make() {
 		$this->checkLimits();
-		$fp = fopen($this->filepath, 'a'); // TODO: lock check/set
+		$fp = fopen($this->filepath, 'a');
 		fputs($fp, $this->eventspace->fetch($this->template) . "\n");
 		fclose($fp);
 	}
