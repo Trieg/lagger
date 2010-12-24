@@ -1,19 +1,19 @@
 <?php
 
 /**
- * 
+ *
  * @see http://code.google.com/p/lagger
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
- * 
+ *
  * @desc Sending messages to Google Chrome console
- 
+
  	You need to install Google Chrome extension:
  	https://chrome.google.com/extensions/detail/nfhmhhlpfleoednkpnnnkolmclajemef
- 	  
+
  */
 
 class Lagger_Action_ChromeConsole extends Lagger_Action {
-	
+
 	const version = 2;
 	const messagesCookiePrefix = 'phpcsl_';
 	const serverVersionCookie = 'phpcsls';
@@ -22,7 +22,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 	const cookieSizeLimit = 4000;
 	const defaultNotifyTimelimit = 1;
 	const messageLengthLimit = 300;
-	
+
 	protected static $isEnabledOnClient;
 	protected static $isDisabled;
 	protected static $messagesBuffer = array();
@@ -30,7 +30,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 	protected static $messagesSent = 0;
 	protected static $cookiesSent = 0;
 	protected static $index = 0;
-	
+
 	protected $type;
 	protected $showNotifyWithTimeLimit;
 
@@ -41,12 +41,14 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 	public function __construct($type, $showNotifyWithTimeLimit = false) {
 		$this->type = $type;
 		$this->showNotifyWithTimeLimit = $showNotifyWithTimeLimit === true ? self::defaultNotifyTimelimit : $showNotifyWithTimeLimit;
-		
+
 		if(self::$isEnabledOnClient === null) {
 			$this->setEnabledOnServer();
 			self::$isEnabledOnClient = $this->isEnabledOnClient();
 			if(self::$isEnabledOnClient) {
-				ob_start();
+				if(!ob_get_level()) {
+					ob_start();
+				}
 				register_shutdown_function(array($this, 'flushMessagesBuffer'));
 			}
 		}
@@ -110,7 +112,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 			}
 		}
 	}
-	
+
 	protected function setCookie($name, $value) {
 		if(headers_sent($file, $line)) {
 			throw new Exception('setcookie() failed because haders are sent (' . $file . ':' . $line . '). Try to use ob_start()');
