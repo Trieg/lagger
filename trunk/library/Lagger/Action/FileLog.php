@@ -27,15 +27,16 @@ class Lagger_Action_FileLog extends Lagger_Action {
 
 	protected function reinitLogFile($filepath, $chmod = null) {
 		file_put_contents($filepath, '');
-		if($chmod) {
+		if($chmod && strpos(PHP_OS, 'WIN') === false) {
 			chmod($filepath, $chmod);
 		}
 	}
 
 	protected function make() {
 		$this->checkLimits();
+		$logString = $this->eventspace->fetch($this->template) . "\n";
 		$fp = fopen($this->filepath, 'a');
-		fputs($fp, $this->eventspace->fetch($this->template) . "\n");
+		fputs($fp, $logString);
 		fclose($fp);
 	}
 
