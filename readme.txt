@@ -9,6 +9,6 @@ Project site:
 Project updates by RSS:
 	http://code.google.com/feeds/p/lagger/updates/basic
 
-Contact to developer (freelancer, ready for new job):
+Contact to developer (freelancer, looking for interesting web-projects):
 	http://www.linkedin.com/in/barbushin - English
 	http://barbushin.moikrug.ru - Russian
