@@ -11,3 +11,6 @@ http://code.google.com/feeds/p/lagger/updates/basic
 
 Contact to developer (freelancer, looking for interesting web-projects):
 http://linkedin.com/in/barbushin
+
+Donate project development:
+http://web-grant.com/donation/lagger
