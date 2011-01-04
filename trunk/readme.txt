@@ -12,5 +12,5 @@ http://code.google.com/feeds/p/lagger/updates/basic
 Contact to developer (freelancer, looking for interesting web-projects):
 http://linkedin.com/in/barbushin
 
-Do you want to say thanks and help developer working on Primage?
+Do you want to say thanks and help developer working on Lagger?
 http://web-grant.com/donation/lagger
