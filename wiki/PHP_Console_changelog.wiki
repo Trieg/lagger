@@ -7,7 +7,7 @@
 
 
 
-*Migration instruction*: update Lagger to last version and forget about using any arguments in  Lagger_Action_ChromeConsole constructor. Configuration of PHP Console is now works from Chrome web-page Context menu.
+*Migration instruction*: update Lagger to last version and forget about using any arguments in  Lagger_Action_ChromeConsole constructor (like in "How to use" chapter of [https://chrome.google.com/extensions/detail/nfhmhhlpfleoednkpnnnkolmclajemef extension homepage]. Configuration of PHP Console is now works from Chrome web-page Context menu.
 
 
 
