@@ -1,5 +1,3 @@
-#summary PHP Console changelog
-
 == 1.7 (2011/01/08) ==
 
   * Optimized: New event-based messages passing algorithm - more stable and fast.
