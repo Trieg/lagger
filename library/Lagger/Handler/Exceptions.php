@@ -23,7 +23,7 @@ class Lagger_Handler_Exceptions extends Lagger_Handler{
 	public function handle(Exception $exception) {
 		$code = $exception->getCode() ? $exception->getCode() : E_USER_ERROR;
 		
-		$eventTags = 'fatal,exception,'.get_class($exception);
+		$eventTags = 'error,exception,fatal,'.get_class($exception);
 		$eventVars = array(
 		'message' => $exception->getMessage(),
 		'code' => $code,
