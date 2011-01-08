@@ -14,7 +14,7 @@ var client = new function() {
 					sendToNotifications({
 						notifyDelay : 30,
 						type : 'ahtung',
-						subject : 'PHP Console failed',
+						subject : 'PHP Console disabled',
 						text : 'You\'re using old version of Lagger on ' + location.host + '. Please update it from <a href="http://code.google.com/p/lagger" target="_blank">Lagger homepage</a>.'
 					});
 					fatalNotified = true;
