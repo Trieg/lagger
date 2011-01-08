@@ -64,3 +64,16 @@ body {
 	font-weight: bold;
 	background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.1, rgb(6, 78, 123) ), color-stop(0.8, rgb(15, 97, 149) ) );
 }
+
+.update {
+	color: white;
+	font-weight: bold;
+	background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.1, rgb(0, 210, 70) ), color-stop(0.8, rgb(0, 200, 57) ) );
+}
+
+.ahtung {
+	color: white;
+	font-weight: bold;
+	background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.1, rgb(223, 11, 117) ), color-stop(0.8, rgb(223, 11, 117) ) );
+}
+

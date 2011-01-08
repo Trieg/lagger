@@ -5,7 +5,7 @@
 	 
 	"content_scripts": [ {
 		"all_frames": true,
-		"js": [ "main.js" ],
+		"js": [ "content.js" ],
 		"matches": [ "http://*/*", "https://*/*" ],
 		"run_at": "document_start"
 	 } ],
@@ -18,6 +18,6 @@
 		"16": "img/logo_16.png"
 	 },
 	 
-	 "permissions": [ "tabs", "notifications", "http://*/", "https://*/" ],
-	 "version": "1.4.5"
+	 "permissions": [ "contextMenus", "tabs", "cookies", "notifications", "http://*/", "https://*/" ],
+	 "version": "1.7"
 }

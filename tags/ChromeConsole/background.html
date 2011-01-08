@@ -1,126 +1,15 @@
+﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<script type="text/javascript">
-
-notifies = [];
-current = null;
-timeout = null;
-firstDelay = 3000;
-limit = 50;
-lockTimeout = false;
-
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-	if (request.showNotifications) {
-		showNotifications(request.showNotifications);
-	}
-	else if (request.changeTimeout) {
-		if (request.changeTimeout.stop) {
-			lockTimeout = true;
-			stopTimeout();
-		}
-		else {
-			lockTimeout = false;
-			startTimeout();
-		}
-	}
-});
-
-function showNotification(message) {
-	var query = '?';
-	for ( var k in message) {
-		query = query + encodeURIComponent(k) + '=' + encodeURIComponent(message[k]) + '&';
-	}
-	var notifyPageURL = chrome.extension.getURL('notify.html') + query;
-	var notification = webkitNotifications.createHTMLNotification(notifyPageURL);
-
-	notifies.push({
-		notification : notification,
-		message : message
-	});
-	var i = notifies.length - 1;
-	notification.onclose = function(a) {
-		if (timeout) {
-			for ( var k in notifies) {
-				clearNotification(k);
-			}
-		}
-		else {
-			handleNextNotification();
-		}
-	};
-	return notification;
-}
-
-function clearNotification(i) {
-	if (i == current) {
-		stopTimeout();
-		current = null;
-	}
-	if (notifies[i]) {
-		if (notifies[i].notification) {
-			notifies[i].notification.cancel();
-		}
-		delete notifies[i];
-	}
-}
-
-function handleNextNotification(noTimeout) {
-	if (current) {
-		return;
-	}
-	for ( var i in notifies) {
-		if (notifies[i]) {
-			current = i;
-			if(!noTimeout) {
-				startTimeout();
-			}
-			return;
-		}
-	}
-}
-
-function startTimeout() {
-	if(lockTimeout) {
-		return;
-	}
-	var i = current;
-	if(notifies[i]) {
-		timeout = setTimeout(function() {
-			stopTimeout();
-			if(lockTimeout) {
-				return;
-			}
-			clearNotification(i);
-		}, notifies[i].message.notify * 1000);
-	}
-}
-
-function stopTimeout() {
-	if (timeout) {
-		clearTimeout(timeout);
-		timeout = null;
-	}
-}
-
-function showNotifications(messages) {
-	var notifications = [];
-	for ( var i in messages) {
-		notifications.push(showNotification(messages[i]));
-		if(notifications.length > limit) {
-			break;
-		}
-	}
-	for ( var i in notifications) {
-		notifications[i].show();
-	}
-	stopTimeout();
-	setTimeout(function() {
-		handleNextNotification();
-	},  3000);
-}
-
-</script>
+    <title>PHP Console - Background page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script type="text/javascript" src="background/options.js"></script>
+    <script type="text/javascript" src="background/menu.js"></script>
+    <script type="text/javascript" src="background/notifications.js"></script>
+    <script type="text/javascript" src="background/cookies.js"></script>
+    <script type="text/javascript" src="background/messages.js"></script>
+    <script type="text/javascript" src="background/init.js"></script>
 </head>
-<body></body>
+<body onload="init()">
+</body>
 </html>
