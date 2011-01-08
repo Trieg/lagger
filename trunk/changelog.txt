@@ -1,6 +1,7 @@
 Release 1.4.6
 
 * Added: New version of Lagger_Action_ChromeConsole
+* Deprecated: FirePHP support
 
 Release 1.4.5
 
