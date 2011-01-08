@@ -63,8 +63,6 @@ if(DEBUG_STDOUT) {
 	$debug->addAction(new Lagger_Action_Print(DEBUG_STDOUT_TEMPLATE), DEBUG_STDOUT_TAGS, $debugTagger);
 	// check Lagger/Action/ChromeConsole.php about how you can use it
 	$debug->addAction(new Lagger_Action_ChromeConsole(), DEBUG_STDOUT_TAGS, $debugTagger);
-	// check Lagger/Action/FirePHP.php about how you can use it
-	$debug->addAction(new Lagger_Action_FirePhp('{message}', '{tags}', FirePHP::INFO), DEBUG_STDOUT_TAGS, $debugTagger);
 }
 if(DEBUG_LOGING) {
 	$debug->addAction(new Lagger_Action_FileLog(DEBUG_LOGING_TEMPLATE, DEBUG_LOGING_FILEPATH, DEBUG_LOGING_LIMIT_SIZE), DEBUG_LOGING_TAGS);
@@ -86,11 +84,6 @@ if(ERRORS_STDOUT) {
 	$errorsChromeAction = new Lagger_Action_ChromeConsole();
 	$errors->addAction($errorsChromeAction, ERRORS_STDOUT_TAGS);
 	$exceptions->addAction($errorsChromeAction, ERRORS_STDOUT_TAGS);
-	
-	// check Lagger/Action/FirePHP.php about how you can use it
-	$errorsFirePhpAction = new Lagger_Action_FirePhp('{message} {file}:{line}', '{type}', FirePHP::ERROR);
-	$errors->addAction($errorsFirePhpAction, ERRORS_STDOUT_TAGS);
-	$exceptions->addAction($errorsFirePhpAction, ERRORS_STDOUT_TAGS);
 }
 
 $fatalPrintAction = new Lagger_Action_Print('<br /><font color="red">Our site is FATALY dead, please check it again when we will fix it... in next summer :)', false);
