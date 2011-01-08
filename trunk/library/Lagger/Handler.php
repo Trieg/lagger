@@ -7,7 +7,7 @@
  *
  */
 abstract class Lagger_Handler {
-
+	
 	protected $eventspace;
 	protected $actions = array();
 	protected $currentAction;

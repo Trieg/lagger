@@ -53,7 +53,7 @@ class Lagger_Handler_Errors extends Lagger_Handler {
 			$code = E_USER_ERROR;
 		}
 		
-		$eventTags = isset(self::$codesTags[$code]) ? self::$codesTags[$code] : 'warning';
+		$eventTags = 'error,' . (isset(self::$codesTags[$code]) ? self::$codesTags[$code] : 'warning');
 		$eventVars = array('message' => $message, 'code' => $code, 'type' => isset(self::$codesNames[$code]) ? self::$codesNames[$code] : $code, 'file' => $file, 'line' => $line);
 		
 		$this->handleActions($eventVars, $eventTags);
