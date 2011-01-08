@@ -1,6 +1,6 @@
 #summary PHP Console changelog
 
-== 1.5 (2011/01/08) ==
+== 1.7 (2011/01/08) ==
 
   * Optimized: New event-based messages passing algorithm - more stable and fast.
   * Added: Configuration PHP Console from Context menu (right click on web-page): https://chrome.google.com/extensions/img/nfhmhhlpfleoednkpnnnkolmclajemef/1294468033.88/screenshot/11001?asd=dsa.jpg
