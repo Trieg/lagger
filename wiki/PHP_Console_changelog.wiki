@@ -1,23 +1,17 @@
 #summary PHP Console changelog
 
-= Introduction =
+== 1.5 (2011/01/08) ==
 
+  * Optimized: New event-based messages passing algorithm - more stable and fast.
+  * Added: Configuration PHP Console from Context menu (right click on web-page) and see: 
+
+
+
+
+*Migration instruction*: update Lagger to last version and forget about using any arguments in  Lagger_Action_ChromeConsole constructor. Configuration of PHP Console is now works from Chrome web-page Context menu.
+
+
+
+Added: 
 
 == 1.4 (2010/11/10) ==
-
- ✔ Handle exceptions and all errors, even E_FATAL and E_COMPILE
- ✔ Display debug and errors messages in Google Chrome console
- ✔ Display debug and errors messages in Notification popups
-    ✔ First popup is displayed with 3 second lifetime
-    ✔ All other popups are displayed with custom lifetime
-    ✔ Popup is not hiding if mouse is over or popup window is selected
-    ✔ All popups can be closed by clicking (x) close icon of any popup
- ✔ Catch messages from any sources
-    ✔  Web page
-    ✔  AJAX
-    ✔  IFrame
- ✔ Make custom actions on errors and debug messages:
-    ✔ Log to file
-    ✔ Send Email
-    ✔ Send SMS
-    ✔ Send to STDOUT
