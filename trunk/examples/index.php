@@ -9,11 +9,7 @@ echo '<h3>Simple debug messages (default tag is "message"). <br />Tags output is
 toDebug('Debug message with default tag "message"'); // will be not printed
 toDebug('Debug message with tag "high"', 'high'); // will be not printed
 toDebug('Debug message with tags "high,test"', 'high,test'); // will be printed
-if(headers_sent()) {
-die('asd');
-}
 toDebug('Debug message with tags "high,test,database"', 'high,test,database'); // will be printed
-toDebug('Oops, lagger did it again :)', 'speak'); // will be not printed, but you will hear it (if PHP installed on Windows)
 
 echo '<br /><b>You can override tags for debug output by __debug parameter in GET:</b><br />
 <a href="?__debug=">Show all</a><br />
