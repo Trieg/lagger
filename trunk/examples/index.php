@@ -3,6 +3,7 @@
 require_once ('config.php');
 require_once ('lagger_init.php');
 
+
 echo '<h3>Simple debug messages (default tag is "message"). <br />Tags output is configured in: define("DEBUG_STDOUT_TAGS", "test,high")</h3>'; 
 
 toDebug('Debug message with default tag "message"'); // will be not printed
@@ -29,9 +30,26 @@ echo '<h3>Some PHP errors</h3>';
 $blahamuha = $some['unkownVar'];
 file_get_contents('blahamuha.txt');
 
+
+class TestBacktrace {
+	public function __construct() {
+		$this->f1();
+	}
+	public function f1() {
+		$this->f2();
+	}
+	public function f2() {
+		self::f3();
+	}
+	public static function f3() {
+		echo $someUnkownVar;
+		throw new Exception('There is some exception');
+	}
+}
+
 echo '<h3>If you catch all exceptions to show user error page, so you should do it like this</h3>'; 
 try {
-	throw new Exception('There is some catched exception');
+	$obj = new TestBacktrace();
 }
 catch (Exception $e) {
 	$exceptions->handle($e);
