@@ -1,21 +1,21 @@
 <?php
 
 /**
- * 
+ *
  * @desc This class provides namespace of events variables
  * @see http://code.google.com/p/lagger
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
- * 
+ *
  */
 class Lagger_Eventspace {
-	
+
 	const leftTag = '{';
 	const rightTag = '}';
 	const modifierTag = '|';
-	
+
 	const varIsValue = 0;
 	const varIsCallback = 1;
-	
+
 	protected $vars = array();
 	protected $varsValues = array();
 	protected $modifiers = array();
@@ -39,7 +39,7 @@ class Lagger_Eventspace {
 	/**************************************************************
 	 MODIFIERS
 	 **************************************************************/
-	
+
 	public function registerModifier($name, $callback) {
 		if (!is_callable($callback)) {
 			throw new Exception('Modifier "' . $name . '" is not callable');
@@ -62,7 +62,7 @@ class Lagger_Eventspace {
 	/**************************************************************
 	 VARS REGISTRATION
 	 **************************************************************/
-	
+
 	public function registerVar($name, $value) {
 		$this->setVar($name, array(self::varIsValue, $value));
 	}
@@ -88,7 +88,7 @@ class Lagger_Eventspace {
 	/**************************************************************
 	 VARS VALUES
 	 **************************************************************/
-	
+
 	public function resetVarsValues(array $appendedVarsValues = array()) {
 		$this->varsValues = $appendedVarsValues;
 	}
@@ -107,7 +107,7 @@ class Lagger_Eventspace {
 		$this->varsValues[$varName] = $this->compileVar($this->vars[$varName]);
 		return $this->varsValues[$varName];
 	}
-	
+
 	public function __get($varName) {
 		return $this->getVarValue($varName);
 	}
@@ -119,6 +119,6 @@ class Lagger_Eventspace {
 		else { // if ($var[0] == self::varIsValue)
 			$value = $var[1];
 		}
-		return is_scalar($value) || is_null($value) ? $value : var_export($value, true);
+		return is_scalar($value) || $value === null ? $value : var_export($value, true);
 	}
 }

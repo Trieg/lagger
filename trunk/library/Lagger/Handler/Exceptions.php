@@ -1,13 +1,13 @@
 <?php
 
 /**
- * 
+ *
  * @see http://code.google.com/p/lagger
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
- * 
+ *
  */
-class Lagger_Handler_Exceptions extends Lagger_Handler{
-	
+class Lagger_Handler_Exceptions extends Lagger_Handler {
+
 	protected $oldExceptionsHandler;
 	protected $callOldExceptionsHandler;
 
@@ -15,14 +15,14 @@ class Lagger_Handler_Exceptions extends Lagger_Handler{
 		$this->callOldExceptionsHandler = $callOldExceptionsHandler;
 		parent::__construct($eventspace);
 	}
-	
+
 	protected function init() {
 		$this->oldExceptionsHandler = set_exception_handler(array($this, 'handle'));
 	}
 
 	public function handle(Exception $exception) {
 		$code = $exception->getCode() ? $exception->getCode() : E_USER_ERROR;
-		
+
 		$eventTags = 'error,exception,fatal,'.get_class($exception);
 		$eventVars = array(
 		'message' => $exception->getMessage(),
@@ -30,11 +30,14 @@ class Lagger_Handler_Exceptions extends Lagger_Handler{
 		'type' => get_class($exception),
 		'file' => $exception->getFile(),
 		'line' => $exception->getLine(),
-		'trace' => $exception->getTraceAsString(),
 		'exception' => $exception);
-		
+
+		if($exception->getTrace()) {
+			$eventVars['trace'] = self::convertTraceToString($exception->getTrace());
+		}
+
 		$this->handleActions($eventVars, $eventTags);
-		
+
 		if ($this->oldExceptionsHandler && $this->callOldExceptionsHandler) {
 			call_user_func_array($this->oldExceptionsHandler, array($exception));
 		}
