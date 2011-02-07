@@ -57,7 +57,6 @@ class Lagger_Handler_Errors extends Lagger_Handler {
 		$eventVars = array('message' => $message, 'code' => $code, 'type' => isset(self::$codesNames[$code]) ? self::$codesNames[$code] : $code, 'file' => $file, 'line' => $line);
 
 		$traceData = debug_backtrace();
-		array_shift($traceData);
 		if($traceData) {
 			$eventVars['trace'] = self::convertTraceToString($traceData);
 		}
