@@ -28,13 +28,13 @@ file_get_contents('blahamuha.txt');
 
 class TestBacktrace {
 	public function __construct() {
-		$this->f1();
+		$this->f1(true, null);
 	}
 	public function f1() {
-		$this->f2();
+		$this->f2(array());
 	}
 	public function f2() {
-		self::f3();
+		self::f3(new StdClass());
 	}
 	public static function f3() {
 		echo $someUnkownVar;
@@ -44,7 +44,7 @@ class TestBacktrace {
 
 echo '<h3>If you catch all exceptions to show user error page, so you should do it like this</h3>'; 
 try {
-	$obj = new TestBacktrace();
+	$obj = new TestBacktrace('some string');
 }
 catch (Exception $e) {
 	$exceptions->handle($e);
