@@ -1,17 +1,17 @@
 <?php
 
 /**
- * 
+ *
  * @see http://code.google.com/p/lagger
  * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
- * 
+ *
  */
 class Lagger_Handler_Errors extends Lagger_Handler {
-	
+
 	protected static $codesTags = array(E_ERROR => 'fatal', E_WARNING => 'warning', E_PARSE => 'fatal', E_NOTICE => 'notice', E_CORE_ERROR => 'fatal', E_CORE_WARNING => 'warning', E_COMPILE_ERROR => 'fatal', E_COMPILE_WARNING => 'warning', E_USER_ERROR => 'fatal', E_USER_WARNING => 'warning', E_USER_NOTICE => 'notice', E_STRICT => 'warning');
 	protected static $codesNames = array(E_ERROR => 'E_ERROR', E_WARNING => 'E_WARNING', E_PARSE => 'E_PARSE', E_NOTICE => 'E_NOTICE', E_CORE_ERROR => 'E_CORE_ERROR', E_CORE_WARNING => 'E_CORE_WARNING', E_COMPILE_ERROR => 'E_COMPILE_ERROR', E_COMPILE_WARNING => 'E_COMPILE_WARNING', E_USER_ERROR => 'E_USER_ERROR', E_USER_WARNING => 'E_USER_WARNING', E_USER_NOTICE => 'E_USER_NOTICE', E_STRICT => 'E_STRICT');
 	protected static $notCompitableCodes = array('E_RECOVERABLE_ERROR' => 'warning', 'E_DEPRECATED' => 'warning');
-	
+
 	protected $iniSets = array('display_errors' => false, 'html_errors' => false, 'ignore_repeated_errors' => false, 'ignore_repeated_source' => false);
 	protected $oldErrorHandler;
 	protected $callOldErrorHandler;
@@ -52,12 +52,18 @@ class Lagger_Handler_Errors extends Lagger_Handler {
 		if(!$code) {
 			$code = E_USER_ERROR;
 		}
-		
+
 		$eventTags = 'error,' . (isset(self::$codesTags[$code]) ? self::$codesTags[$code] : 'warning');
 		$eventVars = array('message' => $message, 'code' => $code, 'type' => isset(self::$codesNames[$code]) ? self::$codesNames[$code] : $code, 'file' => $file, 'line' => $line);
-		
+
+		$traceData = debug_backtrace();
+		array_shift($traceData);
+		if($traceData) {
+			$eventVars['trace'] = self::convertTraceToString($traceData);
+		}
+
 		$this->handleActions($eventVars, $eventTags);
-		
+
 		if($this->callOldErrorHandler && $this->oldErrorHandler) {
 			call_user_func_array($this->oldErrorHandler, array($code, $message, $file, $line));
 		}

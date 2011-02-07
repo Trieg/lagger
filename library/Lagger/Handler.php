@@ -7,7 +7,7 @@
  *
  */
 abstract class Lagger_Handler {
-	
+
 	protected $eventspace;
 	protected $actions = array();
 	protected $currentAction;
@@ -43,6 +43,27 @@ abstract class Lagger_Handler {
 			$this->actions[] = array('object' => $action, 'included_tags' => $incTags, 'excluded_tags' => $excTags);
 		}
 		return $this;
+	}
+
+	protected static function convertTraceToString($traceData) {
+		$trace = array();
+		foreach($traceData as $call) {
+			$args = array();
+			foreach($call['args'] as $arg) {
+				if(is_object($arg)) {
+					$args[] = get_class($arg);
+				}
+				elseif(is_array($arg)) {
+					$args[] = 'Array';
+				}
+				else {
+					$arg = var_export($arg, 1);
+					$args[] = strlen($arg) > 12 ? substr($arg, 0, 8) . '...\'' : $arg;
+				}
+			}
+			$trace[] = (isset($call['file']) ? ($call['file'] . ':' . $call['line']) : '[internal call]') . ' - ' . (isset($call['class']) ? $call['class'] . $call['type'] : '') . $call['function'] . '(' . implode(', ', $args) . ')';
+		}
+		return implode("\n", $trace);
 	}
 
 	protected static function parseActionTagsString($tagsString, &$incTags, &$excTags = array()) {

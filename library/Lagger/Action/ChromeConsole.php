@@ -58,11 +58,18 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 		$message['type'] = strpos($this->eventspace->getVarValue('tags'), 'error,') !== false ? 'error' : 'debug';
 		$message['subject'] = $this->eventspace->getVarValue('type');
 		$message['text'] = substr($this->eventspace->getVarValue('message'), 0, self::messageLengthLimit);
+
 		$file = $this->eventspace->getVarValue('file');
 		if($file) {
 			$line = $this->eventspace->getVarValue('line');
 			$message['source'] = $file . ($line ? ":$line" : '');
 		}
+
+		$trace = $this->eventspace->getVarValue('trace');
+		if($trace) {
+			$message['trace'] = explode("\n", $trace);
+		}
+
 		self::pushMessageToBuffer($message);
 		if(strpos($this->eventspace->getVarValue('tags'), ',fatal')) {
 			self::flushMessagesBuffer();
