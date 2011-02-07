@@ -48,6 +48,9 @@ abstract class Lagger_Handler {
 	protected static function convertTraceToString($traceData) {
 		$trace = array();
 		foreach($traceData as $call) {
+			if(isset($call['class']) && strpos($call['class'], 'Lagger_') === 0) {
+				continue;
+			}
 			$args = array();
 			foreach($call['args'] as $arg) {
 				if(is_object($arg)) {
