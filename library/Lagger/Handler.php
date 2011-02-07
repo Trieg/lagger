@@ -45,10 +45,11 @@ abstract class Lagger_Handler {
 		return $this;
 	}
 
-	protected static function convertTraceToString($traceData) {
+	protected static function convertTraceToString($traceData, $eventFile = null, $eventLine = null) {
 		$trace = array();
-		foreach($traceData as $call) {
-			if(isset($call['class']) && strpos($call['class'], 'Lagger_') === 0) {
+		foreach($traceData as $i => $call) {
+			if((isset($call['class']) && strpos($call['class'], 'Lagger_') === 0) || (!$trace && isset($call['file']) && $call['file'] == $eventFile && $call['line'] == $eventLine)) {
+				$trace = array();
 				continue;
 			}
 			$args = array();
@@ -64,7 +65,7 @@ abstract class Lagger_Handler {
 					$args[] = strlen($arg) > 12 ? substr($arg, 0, 8) . '...\'' : $arg;
 				}
 			}
-			$trace[] = (isset($call['file']) ? ($call['file'] . ':' . $call['line']) : '[internal call]') . ' - ' . (isset($call['class']) ? $call['class'] . $call['type'] : '') . $call['function'] . '(' . implode(', ', $args) . ')';
+			$trace[] = '#' . (count($trace) + 1) . ' ' . (isset($call['file']) ? ($call['file'] . ':' . $call['line']) : '[internal call]') . ' - ' . (isset($call['class']) ? $call['class'] . $call['type'] : '') . $call['function'] . '(' . implode(', ', $args) . ')';
 		}
 		return implode("\n", $trace);
 	}

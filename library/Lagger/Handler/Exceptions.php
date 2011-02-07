@@ -33,7 +33,7 @@ class Lagger_Handler_Exceptions extends Lagger_Handler {
 		'exception' => $exception);
 
 		if($exception->getTrace()) {
-			$eventVars['trace'] = self::convertTraceToString($exception->getTrace());
+			$eventVars['trace'] = self::convertTraceToString($exception->getTrace(), $eventVars['file'], $eventVars['line']);
 		}
 
 		$this->handleActions($eventVars, $eventTags);
