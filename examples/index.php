@@ -4,9 +4,9 @@ require_once ('config.php');
 require_once ('lagger_init.php');
 
 
-echo '<h3>Simple debug messages (default tag is "message"). <br />Tags output is configured in: define("DEBUG_STDOUT_TAGS", "test,high")</h3>'; 
+echo '<h3>Simple debug messages (default tag is "debug"). <br />Tags output is configured in: define("DEBUG_STDOUT_TAGS", "test,high")</h3>'; 
 
-toDebug('Debug message with default tag "message"'); // will be not printed
+toDebug('Debug message with default tag "debug"'); // will be not printed
 toDebug('Debug message with tag "high"', 'high'); // will be not printed
 toDebug('Debug message with tags "high,test"', 'high,test'); // will be printed
 toDebug('Debug message with tags "high,test,database"', 'high,test,database'); // will be printed
@@ -17,10 +17,9 @@ echo '<br /><b>You can override tags for debug output by __debug parameter in GE
 <a href="?__debug=high,-database">Show "high" tags and exclude "database" tags</a><br />
 <a href="?__reset">Reset to config settings</a><br />'; 
 
-// Debug by tag 'sql'. Check output in '\examples\logs\debug_sql_log.csv', open with Microsoft Excel or Open office 
+// Debug by tag 'sql'. Check output in '\examples\logs\debug_sql_log.csv'
 $sql = 'SELECT * FROM users';
-toDebug($sql, 'sql,start');usleep(300); // exec sql query
-toDebug($sql, 'sql,finish');
+toDebug($sql, 'sql');
 
 echo '<h3>Some PHP errors</h3>'; 
 $blahamuha = $some['unkownVar'];

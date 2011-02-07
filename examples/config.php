@@ -41,7 +41,7 @@ define('DEBUG_LOGING', true);
 define('DEBUG_LOGING_TAGS', 'sql');
 define('DEBUG_LOGING_FILEPATH', LOGS_DIR . DIRECTORY_SEPARATOR . 'debug_sql_log.csv');
 define('DEBUG_LOGING_LIMIT_SIZE', 500000);
-define('DEBUG_LOGING_TEMPLATE', "{date} {time};{process_id|csv};{microtime|csv};{tags|csv};{message|trim|csv}\n");
+define('DEBUG_LOGING_TEMPLATE', "{date} {time};{process_id|csv};{microtime|csv};{tags|csv};{message|trim|csv}");
 
 // Autoload Lagger classes (check alternative way in /examples/build_phar.php)
 define('LIB_DIR', '../library/');
