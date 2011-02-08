@@ -30,14 +30,18 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 	protected static $messagesSent = 0;
 	protected static $cookiesSent = 0;
 	protected static $index = 0;
+	protected $stripBaseSourcePath = 0;
 
-	public function __construct() {
+	public function __construct($stripBaseSourcePath = null) {
 		if(self::$isEnabledOnClient === null) {
 			self::setEnabledOnServer();
 			self::$isEnabledOnClient = self::isEnabledOnClient();
 			if(self::$isEnabledOnClient) {
 				ob_start();
 			}
+		}
+		if($stripBaseSourcePath) {
+			$this->stripBaseSourcePath = realpath($stripBaseSourcePath);
 		}
 	}
 
@@ -61,12 +65,18 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 
 		$file = $this->eventspace->getVarValue('file');
 		if($file) {
+			if($this->stripBaseSourcePath) {
+				$file = str_replace($this->stripBaseSourcePath, '', $file);
+			}
 			$line = $this->eventspace->getVarValue('line');
 			$message['source'] = $file . ($line ? ":$line" : '');
 		}
 
 		$trace = $this->eventspace->getVarValue('trace');
 		if($trace) {
+			if($this->stripBaseSourcePath) {
+				$trace = str_replace($this->stripBaseSourcePath, '', $trace);
+			}
 			$message['trace'] = explode("\n", $trace);
 		}
 
