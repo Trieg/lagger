@@ -1,3 +1,8 @@
+Release 1.5
+
+* Added: Backtrace of error/exception calls availabled like {trace} template var
+* Added: New version of Lagger_Action_ChromeConsole with backtrace support
+
 Release 1.4.6
 
 * Added: New version of Lagger_Action_ChromeConsole
