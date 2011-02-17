@@ -65,7 +65,11 @@ abstract class Lagger_Handler {
 					$args[] = strlen($arg) > 12 ? substr($arg, 0, 8) . '...\'' : $arg;
 				}
 			}
-			$trace[] = '#' . (count($trace) + 1) . ' ' . (isset($call['file']) ? ($call['file'] . ':' . $call['line']) : '[internal call]') . ' - ' . (isset($call['class']) ? $call['class'] . $call['type'] : '') . $call['function'] . '(' . implode(', ', $args) . ')';
+			$trace[] = (isset($call['file']) ? ($call['file'] . ':' . $call['line']) : '[internal call]') . ' - ' . (isset($call['class']) ? $call['class'] . $call['type'] : '') . $call['function'] . '(' . implode(', ', $args) . ')';
+		}
+		rsort($trace);
+		foreach($trace as $i => &$call) {
+			$call = '#' . ($i + 1) . ' ' . $call;
 		}
 		return implode("\n", $trace);
 	}
