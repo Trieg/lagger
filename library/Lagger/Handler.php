@@ -67,7 +67,7 @@ abstract class Lagger_Handler {
 			}
 			$trace[] = (isset($call['file']) ? ($call['file'] . ':' . $call['line']) : '[internal call]') . ' - ' . (isset($call['class']) ? $call['class'] . $call['type'] : '') . $call['function'] . '(' . implode(', ', $args) . ')';
 		}
-		rsort($trace);
+		krsort($trace);
 		foreach($trace as $i => &$call) {
 			$call = '#' . ($i + 1) . ' ' . $call;
 		}
