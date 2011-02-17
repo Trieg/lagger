@@ -16,7 +16,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 
 	const clientProtocolCookie = 'phpcslc';
 	const serverProtocolCookie = 'phpcsls';
-	const serverProtocol = 3;
+	const serverProtocol = 4;
 	const messagesCookiePrefix = 'phpcsl_';
 	const cookiesLimit = 50;
 	const cookieSizeLimit = 4000;
