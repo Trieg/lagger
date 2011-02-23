@@ -66,7 +66,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 		$file = $this->eventspace->getVarValue('file');
 		if($file) {
 			if($this->stripBaseSourcePath) {
-				$file = preg_replace('/^'.preg_quote($this->stripBaseSourcePath).'/', '', $file);
+				$file = preg_replace('!^'.preg_quote($this->stripBaseSourcePath, '!').'!', '', $file);
 			}
 			$line = $this->eventspace->getVarValue('line');
 			$message['source'] = $file . ($line ? ":$line" : '');
@@ -75,7 +75,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 		$trace = $this->eventspace->getVarValue('trace');
 		if($trace) {
 			if($this->stripBaseSourcePath) {
-				$trace = preg_replace('/(#\d+ )'.preg_quote($this->stripBaseSourcePath).'/s', '\\1', $trace);
+				$trace = preg_replace('!(#\d+ )'.preg_quote($this->stripBaseSourcePath, '!').'!s', '\\1', $trace);
 			}
 			$message['trace'] = explode("\n", $trace);
 		}
