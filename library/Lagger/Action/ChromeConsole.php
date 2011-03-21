@@ -20,8 +20,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 	const messagesCookiePrefix = 'phpcsl_';
 	const cookiesLimit = 50;
 	const cookieSizeLimit = 4000;
-	const defaultNotifyTimelimit = 1;
-	const messageLengthLimit = 1000;
+	const messageLengthLimit = 2500;
 
 	protected static $isEnabledOnClient;
 	protected static $isDisabled;
