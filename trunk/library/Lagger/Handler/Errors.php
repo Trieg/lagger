@@ -45,7 +45,7 @@ class Lagger_Handler_Errors extends Lagger_Handler {
 		}
 	}
 
-	public function handle($code = null, $message = null, $file = null, $line = null) {
+	public function handle($code = null, $message = null, $file = null, $line = null, $customTags = null) {
 		if(error_reporting() == 0) { // if error has been supressed with an @
 			return;
 		}
@@ -53,7 +53,7 @@ class Lagger_Handler_Errors extends Lagger_Handler {
 			$code = E_USER_ERROR;
 		}
 
-		$eventTags = 'error,' . (isset(self::$codesTags[$code]) ? self::$codesTags[$code] : 'warning');
+		$eventTags = 'error,' . (isset(self::$codesTags[$code]) ? self::$codesTags[$code] : 'warning') . ($customTags ? ',' . $customTags : '');
 		$eventVars = array('message' => $message, 'code' => $code, 'type' => isset(self::$codesNames[$code]) ? self::$codesNames[$code] : $code, 'file' => $file, 'line' => $line);
 
 		$traceData = debug_backtrace();
