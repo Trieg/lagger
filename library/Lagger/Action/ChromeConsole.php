@@ -7,8 +7,8 @@
  *
  * @desc Sending messages to Google Chrome console
 
- 	You need to install Google Chrome extension:
- 	https://chrome.google.com/extensions/detail/nfhmhhlpfleoednkpnnnkolmclajemef
+You need to install Google Chrome extension:
+https://chrome.google.com/extensions/detail/nfhmhhlpfleoednkpnnnkolmclajemef
 
  */
 
@@ -65,7 +65,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 		$file = $this->eventspace->getVarValue('file');
 		if($file) {
 			if($this->stripBaseSourcePath) {
-				$file = preg_replace('!^'.preg_quote($this->stripBaseSourcePath, '!').'!', '', $file);
+				$file = preg_replace('!^' . preg_quote($this->stripBaseSourcePath, '!') . '!', '', $file);
 			}
 			$line = $this->eventspace->getVarValue('line');
 			$message['source'] = $file . ($line ? ":$line" : '');
@@ -74,7 +74,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 		$trace = $this->eventspace->getVarValue('trace');
 		if($trace) {
 			if($this->stripBaseSourcePath) {
-				$trace = preg_replace('!(#\d+ )'.preg_quote($this->stripBaseSourcePath, '!').'!s', '\\1', $trace);
+				$trace = preg_replace('!(#\d+ )' . preg_quote($this->stripBaseSourcePath, '!') . '!s', '\\1', $trace);
 			}
 			$message['trace'] = explode("\n", $trace);
 		}
@@ -95,7 +95,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 	}
 
 	protected static function getNextIndex() {
-		return substr(number_format(microtime(1), 3, '', ''), -6) + self::$index ++;
+		return substr(number_format(microtime(1), 3, '', ''), -6) + self::$index++;
 	}
 
 	public static function flushMessagesBuffer() {
@@ -104,7 +104,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 			self::$bufferLength = 0;
 			self::$messagesSent += count(self::$messagesBuffer);
 			self::$messagesBuffer = array();
-			self::$cookiesSent ++;
+			self::$cookiesSent++;
 			if(self::$cookiesSent == self::cookiesLimit) {
 				self::$isDisabled = true;
 				$message = array('type' => 'error', 'subject' => 'PHP CONSOLE', 'text' => 'MESSAGES LIMIT EXCEEDED BECAUSE OF COOKIES STORAGE LIMIT. TOTAL MESSAGES SENT: ' . self::$messagesSent, 'source' => __FILE__, 'notify' => 3);
@@ -113,15 +113,18 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 		}
 	}
 
-	protected static function setCookie($name, $value) {
+	protected static function setCookie($name, $value, $temporary = false) {
 		if(headers_sent($file, $line)) {
 			throw new Exception('setcookie() failed because haders are sent (' . $file . ':' . $line . '). Try to use ob_start()');
 		}
 		setcookie($name, $value, null, '/');
+		if($temporary) {
+			setcookie($name, false, null, '/');
+		}
 	}
 
 	protected static function sendMessages($messages) {
-		self::setCookie(self::messagesCookiePrefix . self::getNextIndex(), json_encode($messages));
+		self::setCookie(self::messagesCookiePrefix . self::getNextIndex(), json_encode($messages), true);
 	}
 
 	public function __destruct() {
