@@ -117,7 +117,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 		if(headers_sent($file, $line)) {
 			throw new Exception('setcookie() failed because haders are sent (' . $file . ':' . $line . '). Try to use ob_start()');
 		}
-		setcookie($name, $value, null, '/');
+		setcookie($name, $value, 0, '/');
 	}
 
 	protected static function sendMessages($messages) {
