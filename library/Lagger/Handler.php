@@ -53,16 +53,18 @@ abstract class Lagger_Handler {
 				continue;
 			}
 			$args = array();
-			foreach($call['args'] as $arg) {
-				if(is_object($arg)) {
-					$args[] = get_class($arg);
-				}
-				elseif(is_array($arg)) {
-					$args[] = 'Array';
-				}
-				else {
-					$arg = var_export($arg, 1);
-					$args[] = strlen($arg) > 12 ? substr($arg, 0, 8) . '...\'' : $arg;
+			if(isset($call['args'])) {
+				foreach($call['args'] as $arg) {
+					if(is_object($arg)) {
+						$args[] = get_class($arg);
+					}
+					elseif(is_array($arg)) {
+						$args[] = 'Array';
+					}
+					else {
+						$arg = var_export($arg, 1);
+						$args[] = strlen($arg) > 12 ? substr($arg, 0, 8) . '...\'' : $arg;
+					}
 				}
 			}
 			$trace[] = (isset($call['file']) ? ($call['file'] . ':' . $call['line']) : '[internal call]') . ' - ' . (isset($call['class']) ? $call['class'] . $call['type'] : '') . $call['function'] . '(' . implode(', ', $args) . ')';
@@ -138,7 +140,7 @@ abstract class Lagger_Handler {
 	}
 
 	/**************************************************************
-	 INTERNAL ERROR HANDLING
+	INTERNAL ERROR HANDLING
 	 **************************************************************/
 
 	public static function addInternalErrorAction(Lagger_Action $action) {
