@@ -124,7 +124,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 	}
 
 	protected static function sendMessages($messages) {
-		self::setCookie(self::messagesCookiePrefix . self::getNextIndex(), json_encode($messages), true);
+		self::setCookie(self::messagesCookiePrefix . self::getNextIndex(), json_encode($messages));
 	}
 
 	public function __destruct() {
