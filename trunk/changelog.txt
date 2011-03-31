@@ -1,3 +1,7 @@
+Release 1.5.1
+
+* Fixed: E_WARNING Invalid argument supplied for foreach() in Lagger/Handler.php:56
+
 Release 1.5
 
 * Added: Backtrace of error/exception calls availabled like {trace} template var
