@@ -8,7 +8,7 @@
  *
  */
 
-require_once ('config.php');
+require_once ('../config.php');
 
 define('LAGGER_DIR', LIB_DIR . 'Lagger');
 define('LAGGER_PHAR_FILEPATH', dirname(__FILE__) . '/Lagger.phar');
@@ -38,4 +38,9 @@ __HALT_COMPILER();
 ');
 $phar->stopBuffering();
 
-echo 'done';
+?>
+<pre>
+Done. See <?= LAGGER_PHAR_FILEPATH ?>
+Now you can include DaBase to your project just by:
+
+require_once('phar://<?= LAGGER_PHAR_FILEPATH ?>);

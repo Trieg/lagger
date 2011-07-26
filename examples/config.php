@@ -43,8 +43,8 @@ define('DEBUG_LOGING_FILEPATH', LOGS_DIR . DIRECTORY_SEPARATOR . 'debug_sql_log.
 define('DEBUG_LOGING_LIMIT_SIZE', 500000);
 define('DEBUG_LOGING_TEMPLATE', "{date} {time};{process_id|csv};{microtime|csv};{tags|csv};{message|trim|csv}");
 
-// Autoload Lagger classes (check alternative way in /examples/build_phar.php)
-define('LIB_DIR', '../library/');
+// Autoload Lagger classes (check alternative way in /examples/build_phar/)
+define('LIB_DIR', dirname(dirname(__FILE__)) . '/library/');
 function autoloadByDir($class) {
 	$filePath = LIB_DIR . str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
 	require_once ($filePath);
