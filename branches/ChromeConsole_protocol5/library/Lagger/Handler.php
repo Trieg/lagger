@@ -45,12 +45,15 @@ abstract class Lagger_Handler {
 		return $this;
 	}
 
-	protected static function convertTraceToString($traceData, $eventFile = null, $eventLine = null) {
+	protected static function convertTraceToString($traceData, &$eventFile = null, &$eventLine = null, $skipCallsLevel = 1) {
 		$trace = array();
 		foreach($traceData as $i => $call) {
-			if((isset($call['class']) && strpos($call['class'], 'Lagger_') === 0) || (!$trace && isset($call['file']) && $call['file'] == $eventFile && $call['line'] == $eventLine)) {
-				$trace = array();
+			if($i < $skipCallsLevel || (isset($call['class']) && strpos($call['class'], 'Lagger_') === 0)) {
 				continue;
+			}
+			if($i == $skipCallsLevel && !$eventFile && isset($call['file'])) {
+				$eventFile = $call['file'];
+				$eventLine = $call['line'];
 			}
 			$args = array();
 			if(isset($call['args'])) {
@@ -71,8 +74,10 @@ abstract class Lagger_Handler {
 		}
 		$trace = array_reverse($trace);
 		foreach($trace as $i => &$call) {
+
 			$call = '#' . ($i + 1) . ' ' . $call;
 		}
+
 		return implode("\n", $trace);
 	}
 

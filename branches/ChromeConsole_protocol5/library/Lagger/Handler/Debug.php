@@ -10,11 +10,23 @@ class Lagger_Handler_Debug extends Lagger_Handler {
 
 	const defaultTags = 'debug';
 
-	public function handle($message = null, $tags = null) {
+	public function handle($message = null, $tags = null, $withTraceAndSource = false, $debugCallLevel = 0) {
 		if(!$tags) {
 			$tags = self::defaultTags;
 		}
-		$this->handleActions(array('message' => $message, 'type' => $tags), $tags);
+		$eventVars = array(
+			'message' => $message,
+			'type' => $tags
+		);
+		if($withTraceAndSource) {
+			$traceData = debug_backtrace();
+			if($traceData) {
+				$eventVars['trace'] = self::convertTraceToString($traceData, $file, $line, $debugCallLevel + 1);
+				$eventVars['file'] = $file;
+				$eventVars['line'] = $line;
+			}
+		}
+		$this->handleActions($eventVars, $tags);
 	}
 
 	protected function isTagsMatches($eventTags, $incTags, $excTags) {
