@@ -28,6 +28,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 
 	protected static $isInitialized = false;
 	protected static $isEnabled = true;
+	protected static $requestHost;
 	protected static $requestUrl;
 	protected static $redirectUrl;
 	protected static $password;
@@ -42,7 +43,8 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 		if(!self::$isInitialized) {
 			self::$isInitialized = true;
 			self::$processUid = mt_rand() . mt_rand();
-			self::$requestUrl = (stripos($_SERVER['SERVER_PROTOCOL'], 'https') === false ? 'http://' : 'https://') . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']) . $_SERVER['REQUEST_URI'];
+			self::$requestHost = (stripos($_SERVER['SERVER_PROTOCOL'], 'https') === false ? 'http://' : 'https://') . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME']);
+			self::$requestUrl = self::$requestHost . $_SERVER['REQUEST_URI'];
 			if(strlen(self::$requestUrl) > 150) {
 				self::$requestUrl = substr(self::$requestUrl, 0, 147) . '...';
 			}
@@ -83,6 +85,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 				'subject' => $this->eventspace->getVarValue('type'),
 				'text' => substr($this->eventspace->getVarValue('message'), 0, self::messageLengthLimit)
 			);
+
 			$file = $this->eventspace->getVarValue('file');
 			if($file) {
 				if($this->stripBaseSourcePath) {
@@ -99,6 +102,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 				}
 				$message['trace'] = explode("\n", $trace);
 			}
+
 			self::pushMessageToBuffer($message);
 			/*
 			 * TODO: test if it'r really requried
@@ -132,6 +136,9 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 				$cookieMessagesSize += $encodedMessageLength;
 			}
 			self::$redirectUrl = self::getRedirectUrl();
+			if(strlen(self::$redirectUrl) > 150) {
+				self::$redirectUrl = substr(self::$redirectUrl, 0, 147) . '...';
+			}
 			$cookies[] = $cookieMessages;
 			foreach($cookies as $cookieMessages) {
 				if(self::$cookiesSent >= self::cookiesLimit) {
@@ -179,7 +186,10 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 	}
 
 	protected static function getRedirectUrl() {
-		return ($headers = headers_list()) && preg_match('/^Location\:\s*(.+)/i', end($headers), $matches) ? $matches[1] : null;
+		$headers = headers_list();
+		if(preg_match('/^Location\:\s*((http)?([\\/\\\\])?(.+))/i', end($headers), $matches)) {
+			return ($matches[2] || $matches[3] ? '' : $_SERVER['REQUEST_URI']) . $matches[1];
+		}
 	}
 
 	public function __destruct() {
