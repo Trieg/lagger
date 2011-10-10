@@ -64,7 +64,7 @@ class Lagger_Handler_Errors extends Lagger_Handler {
 
 		$traceData = debug_backtrace();
 		if($traceData) {
-			$eventVars['trace'] = self::convertTraceToString($traceData);
+			$eventVars['trace'] = self::convertTraceToString($traceData, $file, $line);
 		}
 
 		$this->handleActions($eventVars, $eventTags);
