@@ -18,7 +18,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 
 	const serverProtocol = 4;
 	const cookieSizeLimit = 4000;
-	const messageLengthLimit = 1600;
+	const messageLengthLimit = 300;
 	const cookiesLimit = 50;
 	const clientProtocolCookie = 'phpcslc';
 	const serverProtocolCookie = 'phpcsls';
@@ -51,6 +51,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 			self::sendServerIsActive();
 			self::$isEnabled = self::isEnabledOnClient() && self::isValidPassword($password);
 			if(self::$isEnabled) {
+				register_shutdown_function(array(__CLASS__, 'flushMessagesBuffer'));
 				ob_start();
 			}
 		}
@@ -80,11 +81,15 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 
 	protected function make() {
 		if(self::$isEnabled) {
+			$messageData = $this->eventspace->getVarValue('message', false);
+			self::prepareVarToSerialize($messageData);
 			$message = array(
 				'tags' => $this->eventspace->getVarValue('tags'),
 				'subject' => $this->eventspace->getVarValue('type'),
-				'text' => substr($this->eventspace->getVarValue('message'), 0, self::messageLengthLimit)
+				'text' => $messageData
 			);
+
+			//				'text' => substr($this->eventspace->getVarValue('message', false), 0, self::messageLengthLimit)
 
 			$file = $this->eventspace->getVarValue('file');
 			if($file) {
@@ -182,6 +187,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 			'messages' => $messages
 		);
 		$cookieData = json_encode($data, defined('JSON_UNESCAPED_UNICODE') ? JSON_UNESCAPED_UNICODE : null);
+		$cookieData = str_replace('\u0000*\u0000', '', $cookieData); // required after $array = (array) $object;
 		self::setCookie(self::messagesCookiePrefix . $cookieId, $cookieData, true);
 	}
 
@@ -192,9 +198,31 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 		}
 	}
 
+	public static function prepareVarToSerialize(&$var, $key = null) {
+		static $objectsHashes;
+		if($key === null) {
+			$objectsHashes = array();
+		}
+		if(is_array($var)) {
+			array_walk_recursive($var, array(__CLASS__, 'prepareVarToSerialize'));
+		}
+		elseif(is_object($var)) {
+			$hash = spl_object_hash($var);
+			if(in_array($hash, $objectsHashes)) {
+				$var = 'RECURSION: ' . get_class($var);
+			}
+			else {
+				$objectsHashes[] = $hash;
+				$var = (array)$var;
+				array_walk_recursive($var, array(__CLASS__, 'prepareVarToSerialize'));
+			}
+		}
+		elseif(is_scalar($var) && strlen($var) > self::messageLengthLimit) {
+			$var = substr($var, 0, self::messageLengthLimit) . '...';
+		}
+	}
+
 	public function __destruct() {
 		self::flushMessagesBuffer();
 	}
 }
-
-
