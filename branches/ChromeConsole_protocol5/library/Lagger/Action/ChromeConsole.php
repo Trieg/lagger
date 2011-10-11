@@ -132,6 +132,10 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 			$cookieMessagesSize = 0;
 			foreach(self::$messagesBuffer as $message) {
 				$encodedMessageLength = strlen(rawurlencode(json_encode($message))) + 30;
+				if($encodedMessageLength > self::cookieSizeLimit) {
+					$message['text'] = '[Message content is too big and can\'t be sent]';
+					$encodedMessageLength = strlen(rawurlencode(json_encode($message))) + 30;
+				}
 				if($cookieMessagesSize + $encodedMessageLength > self::cookieSizeLimit) {
 					$cookies[] = $cookieMessages;
 					$cookieMessages = array();

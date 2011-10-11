@@ -26,11 +26,14 @@ class Lagger_Eventspace {
 			$replaces = array();
 			foreach($matches[1] as $varsAndModifiersString) {
 				$varsAndModifiers = explode(self::modifierTag, $varsAndModifiersString);
-				$value = $this->getVarValue($varsAndModifiers[0]);
-				foreach(array_slice($varsAndModifiers, 1) as $modifier) {
-					$value = $this->applyModifier($modifier, $value);
+				$varName = array_shift($varsAndModifiers);
+				$value = $this->getVarValue($varName);
+				if($value) {
+					foreach($varsAndModifiers as $modifier) {
+						$value = $this->applyModifier($modifier, $value, $varName);
+					}
+					$replaces[] = $value;
 				}
-				$replaces[] = $value;
 			}
 			return str_replace($matches[0], $replaces, $template);
 		}
@@ -48,16 +51,14 @@ class Lagger_Eventspace {
 		$this->modifiers[$name] = $callback;
 	}
 
-	public function applyModifier($name, $value) {
+	public function applyModifier($name, $value, $varName) {
 		if(isset($this->modifiers[$name])) {
 			return call_user_func($this->modifiers[$name], $value);
 		}
 		elseif(function_exists($name)) {
 			return call_user_func($name, $value);
 		}
-		else {
-			throw new Exception('Unkown modifier "' . $name . '". Function with name "' . $name . '" does not exists');
-		}
+		return $name . $value;
 	}
 
 	/**************************************************************
