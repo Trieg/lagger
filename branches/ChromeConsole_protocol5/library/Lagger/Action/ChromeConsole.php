@@ -16,7 +16,7 @@
  */
 class Lagger_Action_ChromeConsole extends Lagger_Action {
 
-	const serverProtocol = 4;
+	const serverProtocol = 5;
 	const cookieSizeLimit = 4000;
 	const messageLengthLimit = 300;
 	const cookiesLimit = 50;
@@ -51,7 +51,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 			self::sendServerIsActive();
 			self::$isEnabled = self::isEnabledOnClient() && self::isValidPassword($password);
 			if(self::$isEnabled) {
-				register_shutdown_function(array(__CLASS__, 'flushMessagesBuffer'));
+				register_shutdown_function(array(get_class($this), 'flushMessagesBuffer'));
 				ob_start();
 			}
 		}
@@ -73,8 +73,11 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 	protected static function isValidPassword($password) {
 		$isValidPassword = true;
 		if($password) {
-			$isValidPassword = isset($_COOKIE[self::passwordCookie]) && $_COOKIE[self::clientPasswordCookie] === $password;
-			self::setCookie(self::serverAuthCookie, $isValidPassword ? 'ok' : 'failed', true);
+			$isValidPassword = isset($_COOKIE[self::clientPasswordCookie]) && $_COOKIE[self::clientPasswordCookie] === $password;
+			self::setCookie(self::serverAuthCookie, $isValidPassword ? 'ok' : 'failed');
+		}
+		elseif(isset($_COOKIE[self::serverAuthCookie])) {
+			self::setCookie(self::serverAuthCookie, null, true);
 		}
 		return $isValidPassword;
 	}
@@ -88,8 +91,6 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 				'subject' => $this->eventspace->getVarValue('type'),
 				'text' => $messageData
 			);
-
-			//				'text' => substr($this->eventspace->getVarValue('message', false), 0, self::messageLengthLimit)
 
 			$file = $this->eventspace->getVarValue('file');
 			if($file) {
@@ -190,7 +191,7 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 			'redirectUrl' => self::$redirectUrl,
 			'messages' => $messages
 		);
-		$cookieData = json_encode($data, defined('JSON_UNESCAPED_UNICODE') ? JSON_UNESCAPED_UNICODE : null);
+		$cookieData = defined('JSON_UNESCAPED_UNICODE') ? json_encode($data, JSON_UNESCAPED_UNICODE) : json_encode($data);
 		$cookieData = str_replace('\u0000*\u0000', '', $cookieData); // required after $array = (array) $object;
 		self::setCookie(self::messagesCookiePrefix . $cookieId, $cookieData, true);
 	}
