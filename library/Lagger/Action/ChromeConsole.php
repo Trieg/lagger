@@ -83,42 +83,34 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 	}
 
 	protected function make() {
-		if(self::$isEnabled) {
-			$messageData = $this->eventspace->getVarValue('message', false);
-			self::prepareVarToSerialize($messageData);
-			$message = array(
-				'tags' => $this->eventspace->getVarValue('tags'),
-				'subject' => $this->eventspace->getVarValue('type'),
-				'text' => $messageData
-			);
-
-			$file = $this->eventspace->getVarValue('file');
-			if($file) {
-				if($this->stripBaseSourcePath) {
-					$file = preg_replace('!^' . preg_quote($this->stripBaseSourcePath, '!') . '!', '', $file);
-				}
-				$line = $this->eventspace->getVarValue('line');
-				$message['source'] = $file . ($line ? ':' . $line : '');
-			}
-
-			$trace = $this->eventspace->getVarValue('trace');
-			if($trace) {
-				if($this->stripBaseSourcePath) {
-					$trace = preg_replace('!(#\d+ )' . preg_quote($this->stripBaseSourcePath, '!') . '!s', '\\1', $trace);
-				}
-				$message['trace'] = explode("\n", $trace);
-			}
-
-			self::pushMessageToBuffer($message);
-			/*
-			 * TODO: test if it'r really requried
-			if(strpos($this->eventspace->getVarValue('tags'), ',fatal')) {
-				self::flushMessagesBuffer();
-			}*/
+		if(!self::$isEnabled) {
+			return;
 		}
-	}
+		$messageData = $this->eventspace->getVarValue('message', false);
+		self::prepareVarToSerialize($messageData);
+		$message = array(
+			'tags' => $this->eventspace->getVarValue('tags'),
+			'subject' => $this->eventspace->getVarValue('type'),
+			'text' => $messageData
+		);
 
-	protected static function pushMessageToBuffer($message) {
+		$file = $this->eventspace->getVarValue('file');
+		if($file) {
+			if($this->stripBaseSourcePath) {
+				$file = preg_replace('!^' . preg_quote($this->stripBaseSourcePath, '!') . '!', '', $file);
+			}
+			$line = $this->eventspace->getVarValue('line');
+			$message['source'] = $file . ($line ? ':' . $line : '');
+		}
+
+		$trace = $this->eventspace->getVarValue('trace');
+		if($trace) {
+			if($this->stripBaseSourcePath) {
+				$trace = preg_replace('!(#\d+ )' . preg_quote($this->stripBaseSourcePath, '!') . '!s', '\\1', $trace);
+			}
+			$message['trace'] = explode("\n", $trace);
+		}
+
 		self::$messagesBuffer[] = $message;
 	}
 
@@ -165,11 +157,11 @@ class Lagger_Action_ChromeConsole extends Lagger_Action {
 
 	protected static function sendCookiesLimitExceeded() {
 		self::sendMessagesCookie(array(array(
-				'type' => 'ahtung',
-				'subject' => 'PHP CONSOLE',
-				'text' => 'Cookies limit is exceeded. Try to increase limit or add messages filter.',
-				'source' => __FILE__ . ':' . __LINE__
-			)));
+			'type' => 'ahtung',
+			'subject' => 'PHP CONSOLE',
+			'text' => 'Cookies limit is exceeded. Try to increase limit or add messages filter.',
+			'source' => __FILE__ . ':' . __LINE__
+		)));
 	}
 
 	protected static function setCookie($name, $value, $isTemporary = false) {
