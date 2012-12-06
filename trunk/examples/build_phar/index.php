@@ -3,8 +3,8 @@
 /**
  *
  * @desc There is example of creating PHAR archive of Lagger, so now it can be included in your project just like: require_once('phar://'.LAGGER_PHAR_FILEPATH);
- * @see http://code.google.com/p/lagger
- * @author Barbushin Sergey http://www.linkedin.com/in/barbushin
+ * @see https://github.com/barbushin/lagger
+ * @author Barbushin Sergey http://linkedin.com/in/barbushin
  *
  */
 
@@ -41,6 +41,6 @@ $phar->stopBuffering();
 ?>
 <pre>
 Done. See <?= LAGGER_PHAR_FILEPATH ?>
-Now you can include DaBase to your project just by:
+Now you can include Lagger to your project just by:
 
 require_once('phar://<?= LAGGER_PHAR_FILEPATH ?>);
